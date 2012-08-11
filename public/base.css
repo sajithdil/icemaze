@@ -1,0 +1,23 @@
+
+@import url(http://fonts.googleapis.com/css?family=Reenie+Beanie);
+
+#menu {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: auto; /* will be used later to set top margin of #wrap */
+
+	font-family: 'Reenie Beanie', arial, serif;
+
+	border-bottom: thin solid red;
+}
+
+#wrap {
+	overflow: scroll;
+}
+
+#maze {
+	display: inline-block;
+}
+

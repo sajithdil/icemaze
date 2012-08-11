@@ -28,6 +28,7 @@ Features
 Wishlist
 --------
 
+* resize feature allows to drag maze boundaries out (or in, as crop) on any side, up to a maximum width/height
 * drop-down to load predefined mazes (e.g. original Pokémon GS Ice Path)
 * keep "recent mazes" or "saved mazes" in local browser storage
 * drag-and-drop to reposition entrance/exit
@@ -35,3 +36,4 @@ Wishlist
 * draw maze to a canvas instead of a grid of buttons
 * alternative tilesets (e.g. original Pokémon GS/Crystal tilesets)
 * isometric display option
+* "Print" feature
