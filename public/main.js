@@ -1,7 +1,11 @@
 
 var themes = {
-	"Basic theme": "basic",
+	"Basic theme": basicTheme,
 	"Pokémon Gold/Silver theme": "pkmngs"
+};
+
+var config = {
+	theme: basicTheme,
 };
 
 // begin with a blank maze
@@ -19,6 +23,18 @@ function newMaze(w, h) {
 	};
 }
 
+function showMaze(m) {
+	// resize the canvas
+	var c = $("canvas");
+	var size = config.theme.size(maze);
+	c.attr("width", size[0]).attr("height", size[1]);
+
+	// draw using the theme
+	var c2d = document.getElementById("maze").getContext("2d");
+	config.theme.drawMaze(c2d, maze);
+}
+
+/*
 function showMaze(m) {
 
 	buildGrid(m);
@@ -72,40 +88,46 @@ function buildGrid(m) {
 
 }
 
-function positionMaze() {
-
-	// position and size #wrap to fill screen under #menu
-	var menuHeight = $("#menu").outerHeight(true);
-	$("#wrap").css("marginTop", menuHeight);
-	$("#wrap").height($(window).height() - menuHeight);
-
-	// position the maze in the centre of the screen under #menu
-	// or fill the screen (and include scrollbars) if too big
-	// (menu will always be position fixed at top)
-	$("#maze").position({
-		of: $("#wrap"),
-		my: "middle center",
-		at: "middle center",
-	});
-
-}
-
 function clickCell(x, y, e) {
 	alert("Clicked ("+ x +", "+ y +")");
 }
+*/
+
+function resizeWindow() {
+	// position and size #wrap to fill screen under #menu
+		var menuHeight = $("#menu").outerHeight(true);
+		$("#wrap").css("marginTop", menuHeight);
+		$("#wrap").height($(window).height() - menuHeight);
+}
+
+/* thanks http://stackoverflow.com/a/2880929/1597274 */
+var urlParams = {};
+(function () {
+	var match,
+		pl     = /\+/g,  // regex for replacing addition symbol with a space
+		search = /([^&=]+)=?([^&]*)/g,
+		decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+		query  = window.location.search.substring(1);
+
+	while (match = search.exec(query))
+		urlParams[decode(match[1])] = decode(match[2]);
+})();
 
 $(function(){
 
-	// load themes list into UI selectable
-	// TODO
+	// TODO check whether canvas and 2d drawing context is supported
 
-	// apply default theme
-	// TODO extract from URI query
- 	$("#maze").addClass("basic");
+	// TODO load themes list into UI selectable
 
-	$(window).bind("resize", positionMaze);
+	// TODO check URI query for initial config
+
+	// TODO check connection with server
+
+	// TODO decode and display maze provided in URI query
 
 	showMaze(maze);
 
-});
+	$(window).bind("resize", resizeWindow);
+	resizeWindow();
 
+});
