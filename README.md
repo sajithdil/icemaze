@@ -37,3 +37,4 @@ Wishlist
 * alternative tilesets (e.g. original Pokémon GS/Crystal tilesets)
 * isometric display option
 * "Print" feature
+* animated matte on Pokémon theme [when in play mode]
