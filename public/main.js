@@ -25,7 +25,7 @@ function newMaze(w, h) {
 
 function showMaze(m) {
 	var canvas = $("#maze"), wrapper = $("#wrap");
-	var min = config.theme.minSize(m), wid, hei;
+	var min = config.theme.minSize([m.width, m.height]), wid, hei;
 
 	// at least fill the wrapper width
 	if (min[0] <= wrapper.width()) {
@@ -50,8 +50,13 @@ function showMaze(m) {
 
 	// draw matte and maze using the theme
 	var c2d = canvas.get(0).getContext("2d");
-	config.theme.drawMatte(c2d, [wid, hei]);
-	config.theme.drawMaze(c2d, [wid, hei], m);
+	config.theme.prep([wid, hei], [m.width, m.height]);
+	config.theme.drawMatte(c2d, m);
+	config.theme.drawMaze(c2d, m);
+}
+
+function clickTile(at, metac) {
+	alert("clicked " + at + " using " + metac + " meta keys");
 }
 
 function resizeWindow() {
@@ -90,7 +95,17 @@ $(function(){
 
 	// TODO decode and display maze provided in URI query
 
-	$(window).bind("resize", resizeWindow);
+	$("#maze").on("click", function(ev){
+		// get the click coordinates relative to the canvas
+		var off = $("#maze").offset();
+		var relX = ev.pageX - off.left, relY = ev.pageY - off.top;
+		// doesn't matter which keys; just count how many at once
+		var metaCount = ev.altKey + ev.ctrlKey + ev.shiftKey;
+		// pass only what's needed to clickTile
+		clickTile(config.theme.at(relX, relY), metaCount);
+	});
+
+	$(window).on("resize", resizeWindow);
 	resizeWindow();
 
 });

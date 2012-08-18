@@ -6,35 +6,51 @@ var themeBasic = {
 	tileH: 50,
 	margin: 10,
 
+	current: {},
+
 	init: function() {
 		// nothing to do to initialize basic theme
 	},
 
-	minSize: function(maze) {
-		var w = (maze.width * this.tileW) + (2 * this.margin);
-		var h = (maze.height * this.tileH) + (2 * this.margin);
+	prep: function(cSize, mSize) {
+		this.current.cSize = cSize;
+		this.current.minSize = this.minSize(mSize);
+		this.current.offsets = this.offsets(cSize, mSize);
+	},
+
+	minSize: function(mSize) {
+		var w = (mSize[0] * this.tileW) + (2 * this.margin);
+		var h = (mSize[1] * this.tileH) + (2 * this.margin);
 		return [w, h];
 	},
 
-	whichTile: function(x, y) {
-		x = Math.floor((x - this.margin) / this.tileW);
-		y = Math.floor((y - this.margin) / this.tileH);
+	offsets: function(cSize, mSize) {
+		// returns the offset from the top-left of the canvas
+		// for drawing the maze centred in the canvas
+		mSize = this.minSize(mSize);
+		var xoff = Math.floor((cSize[0] - mSize[0]) / 2) + this.margin;
+		var yoff = Math.floor((cSize[1] - mSize[1]) / 2) + this.margin;
+		return [xoff, yoff];
+	},
+
+	at: function(x, y) {
+		// call prep(cSize, mSize) before calling at(x, y)
+		// returns tile coordinates at pixel (x, y)
+		x = Math.floor((x - this.current.offsets[0]) / this.tileW);
+		y = Math.floor((y - this.current.offsets[1]) / this.tileH);
 		return [x, y];
 	},
 
-	drawMatte: function(c2d, cSize) {
+	drawMatte: function(c2d, maze) {
 		// simply clear the entire canvas
-		c2d.clearRect(0, 0, cSize[0], cSize[1]);
+		c2d.clearRect(0, 0, this.current.cSize[0], this.current.cSize[1]);
 	},
 
-	drawMaze: function(c2d, cSize, maze) {
+	drawMaze: function(c2d, maze) {
 		c2d.save();
 
-		// get offsets for drawing the maze in centre of canvas
-		var mazeSize = this.minSize(maze);
-		var xoff = Math.floor((cSize[0] - mazeSize[0]) / 2);
-		var yoff = Math.floor((cSize[1] - mazeSize[1]) / 2);
-		c2d.translate(xoff + this.margin, yoff + this.margin);
+		// translate for drawing the maze in centre of canvas
+		c2d.translate(this.current.offsets[0], this.current.offsets[1]);
 
 		// draw grid
 		c2d.fillStyle = 'black';
