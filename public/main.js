@@ -1,11 +1,11 @@
 
 var themes = {
-	"Basic theme": basicTheme,
-	"Pokémon Gold/Silver theme": "pkmngs"
+	"Basic theme": themeBasic,
+	"Pokémon Gold/Silver theme": themePkmnGS,
 };
 
 var config = {
-	theme: basicTheme,
+	theme: themeBasic,
 };
 
 // begin with a blank maze
@@ -24,98 +24,63 @@ function newMaze(w, h) {
 }
 
 function showMaze(m) {
-	// resize the canvas
-	var c = $("canvas");
-	var size = config.theme.size(maze);
-	c.attr("width", size[0]).attr("height", size[1]);
+	var canvas = $("#maze"), wrapper = $("#wrap");
+	var min = config.theme.minSize(m), wid, hei;
 
-	// draw using the theme
-	var c2d = document.getElementById("maze").getContext("2d");
-	config.theme.drawMaze(c2d, maze);
-}
-
-/*
-function showMaze(m) {
-
-	buildGrid(m);
-
-	// update tiles
-	// TODO
-
-}
-
-function buildGrid(m) {
-
-	var maze = $("#maze");
-	var grid = $("#grid", maze);
-
-	// return if the grid already has correct dimensions
-	if (grid.attr("width") == m.width && grid.attr("height") == m.height)
-		return;
-
-	// reset the grid
-	grid.empty();
-
-	// set dimensions
-	grid.attr("width", m.width).attr("height", m.height);
-
-	// add and position all cells
-	for (var y = -1; y <= m.height; y++) { // row by row
-		for (var x = -1; x <= m.width; x++) { // col by col
-			$("<button/>", {
-				"x": x,
-				"y": y,
-				"class": ((x < 0 || x >= m.width || y < 0 || y >= m.height)
-					? "border" : "plane") + " cell"
-			}).appendTo(grid);
-		}
-		$("<br/>").appendTo(grid);
+	// at least fill the wrapper width
+	if (min[0] <= wrapper.width()) {
+		wid = wrapper.width();
+		wrapper.css("overflow-x", "hidden");
+	} else {
+		wid = min[0];
+		wrapper.css("overflow-x", "scroll");
 	}
 
-	// add grid handlers
-	$(".cell.plane").click(function(e){
-		clickCell($(this).attr("x"), $(this).attr("y"), e);
-	});
+	// at least fill the wrapper height
+	if (min[1] <= wrapper.height()) {
+		hei = wrapper.height();
+		wrapper.css("overflow-y", "hidden");
+	} else {
+		hei = min[1];
+		wrapper.css("overflow-y", "scroll");
+	}
 
-	// add entry/exit indicators (which will be positioned later)
-	$(".cell[x="+m.entry[0]+"][y="+m.entry[1]+"]").addClass("entry");
-	$(".cell[x="+m.exit[0]+"][y="+m.exit[1]+"]").addClass("exit");
+	// resize the canvas
+	canvas.attr("width", wid).attr("height", hei);
 
-	// add drag/drop ability to entry/exit
-	// TODO
-
-	positionMaze();
-
+	// draw matte and maze using the theme
+	var c2d = canvas.get(0).getContext("2d");
+	config.theme.drawMatte(c2d, [wid, hei]);
+	config.theme.drawMaze(c2d, [wid, hei], m);
 }
-
-function clickCell(x, y, e) {
-	alert("Clicked ("+ x +", "+ y +")");
-}
-*/
 
 function resizeWindow() {
 	// position and size #wrap to fill screen under #menu
-		var menuHeight = $("#menu").outerHeight(true);
-		$("#wrap").css("marginTop", menuHeight);
-		$("#wrap").height($(window).height() - menuHeight);
+	var menuHeight = $("#menu").outerHeight(true);
+	$("#wrap").css("margin-top", menuHeight);
+	$("#wrap").height($(window).height() - menuHeight);
+	// redraw the maze
+	showMaze(maze);
 }
 
 /* thanks http://stackoverflow.com/a/2880929/1597274 */
 var urlParams = {};
 (function () {
 	var match,
-		pl     = /\+/g,  // regex for replacing addition symbol with a space
-		search = /([^&=]+)=?([^&]*)/g,
-		decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
-		query  = window.location.search.substring(1);
+	 pl     = /\+/g,  // regex for replacing addition symbol with a space
+	 search = /([^&=]+)=?([^&]*)/g,
+	 decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+	 query  = window.location.search.substring(1);
 
 	while (match = search.exec(query))
-		urlParams[decode(match[1])] = decode(match[2]);
+	 urlParams[decode(match[1])] = decode(match[2]);
 })();
 
 $(function(){
 
 	// TODO check whether canvas and 2d drawing context is supported
+
+	// TODO initialize themes
 
 	// TODO load themes list into UI selectable
 
@@ -124,8 +89,6 @@ $(function(){
 	// TODO check connection with server
 
 	// TODO decode and display maze provided in URI query
-
-	showMaze(maze);
 
 	$(window).bind("resize", resizeWindow);
 	resizeWindow();
