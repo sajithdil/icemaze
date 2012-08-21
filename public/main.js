@@ -56,7 +56,16 @@ function showMaze(m) {
 }
 
 function clickTile(at, metac) {
-	alert("clicked " + at + " using " + metac + " meta keys");
+	showStatus("clicked " + at + " using " + metac + " meta keys", 2000);
+}
+
+function showStatus(mesg, timeout) {
+	var d = $("<p/>").text(mesg).appendTo("#info");
+	var fadeRemove = function() {
+		d.fadeOut("slow", function() { d.remove(); });
+	};
+	d.on("click", fadeRemove);
+	if (!!timeout) setTimeout(fadeRemove, timeout);
 }
 
 function resizeWindow() {

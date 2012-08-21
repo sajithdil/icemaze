@@ -12,6 +12,26 @@
 	border-bottom: thin solid red;
 }
 
+#info {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	height: auto;
+	overflow: hidden;
+
+	font-size: small;
+}
+
+#info p {
+	margin: 1px;
+	padding: 1ex;
+
+	background-color: white;
+	color: black;
+
+	border-radius: 1em;
+}
+
 #wrap {
 	overflow: auto;
 }
