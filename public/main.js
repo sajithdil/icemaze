@@ -1,4 +1,4 @@
-/* main.js */
+/* main.js with very minimal error-checking */
 
 var themes = {
 	"Basic theme": themeBasic,
@@ -15,13 +15,21 @@ var maze = new Maze([10, 10]);
 
 /* ********************************** */
 
-function showMaze(m) {
-	var canvas = $("#maze"), wrapper = $("#wrap");
-	var min = config.theme.minSize([m.width, m.height]), wid, hei;
+function refit() {
+	var menu = $("#menu"), wrapper = $("#wrap"), canvas = $("#maze");
+
+	// position and size #wrap to fill screen under #menu
+	var menuHeight = menu.outerHeight(true);
+	wrapper.css("margin-top", menuHeight);
+	wrapper.height($(window).height() - menuHeight);
+
+	// resize the canvas to at least fill the wrapper
+	var wrapperWidth = wrapper.width(), wrapperHeight = wrapper.height();
+	var min = config.theme.minSize([maze.width, maze.height]), wid, hei;
 
 	// at least fill the wrapper width
-	if (min[0] <= wrapper.width()) {
-		wid = wrapper.width();
+	if (min[0] <= wrapperWidth) {
+		wid = wrapperWidth;
 		wrapper.css("overflow-x", "hidden");
 	} else {
 		wid = min[0];
@@ -29,8 +37,8 @@ function showMaze(m) {
 	}
 
 	// at least fill the wrapper height
-	if (min[1] <= wrapper.height()) {
-		hei = wrapper.height();
+	if (min[1] <= wrapperHeight) {
+		hei = wrapperHeight;
 		wrapper.css("overflow-y", "hidden");
 	} else {
 		hei = min[1];
@@ -40,11 +48,19 @@ function showMaze(m) {
 	// resize the canvas
 	canvas.attr("width", wid).attr("height", hei);
 
+	redraw(canvas);
+}
+
+function redraw(canvas, theme, m) {
+	canvas = canvas || $("#maze");
+	theme = theme || config.theme;
+	m = m || maze;
 	// draw matte and maze using the theme
 	var c2d = canvas.get(0).getContext("2d");
-	config.theme.prep([wid, hei], [m.width, m.height]);
-	config.theme.drawMatte(c2d, m);
-	config.theme.drawMaze(c2d, m);
+	var cSize = [canvas.attr("width"), canvas.attr("height")];
+	theme.prep(cSize, [m.width, m.height]);
+	theme.drawMatte(c2d, m);
+	theme.drawMaze(c2d, m);
 }
 
 function clickTile(at, metac) {
@@ -58,15 +74,6 @@ function showStatus(mesg, timeout) {
 	};
 	d.on("click", fadeRemove);
 	if (!!timeout) setTimeout(fadeRemove, timeout);
-}
-
-function resizeWindow() {
-	// position and size #wrap to fill screen under #menu
-	var menuHeight = $("#menu").outerHeight(true);
-	$("#wrap").css("margin-top", menuHeight);
-	$("#wrap").height($(window).height() - menuHeight);
-	// redraw the maze
-	showMaze(maze);
 }
 
 /* thanks http://stackoverflow.com/a/2880929/1597274 */
@@ -106,7 +113,7 @@ $(function(){
 		clickTile(config.theme.at(relX, relY), metaCount);
 	});
 
-	$(window).on("resize", resizeWindow);
-	resizeWindow();
+	$(window).on("resize", refit);
+	refit();
 
 });
