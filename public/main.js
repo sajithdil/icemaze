@@ -1,3 +1,4 @@
+/* main.js */
 
 var themes = {
 	"Basic theme": themeBasic,
@@ -10,18 +11,9 @@ var config = {
 
 // begin with a blank maze
 // TODO instead use a random maze on startup
-var maze = newMaze(10,10);
+var maze = new Maze([10, 10]);
 
-// returns a blank maze of width w and height h
-function newMaze(w, h) {
-	return {
-		width: w,
-		height: h,
-		cells: [[]],
-		entry:[-1,0], // left of top-left corner
-		exit:[w,h-1]  // right of bottom-right corner 
-	};
-}
+/* ********************************** */
 
 function showMaze(m) {
 	var canvas = $("#maze"), wrapper = $("#wrap");
