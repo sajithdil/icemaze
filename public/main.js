@@ -25,7 +25,7 @@ function refit() {
 
 	// resize the canvas to at least fill the wrapper
 	var wrapperWidth = wrapper.width(), wrapperHeight = wrapper.height();
-	var min = config.theme.minSize([maze.width, maze.height]), wid, hei;
+	var min = config.theme.minSize([maze.width, maze.height], true), wid, hei;
 
 	// at least fill the wrapper width
 	if (min[0] <= wrapperWidth) {
@@ -102,6 +102,7 @@ $(function(){
 	// TODO decode and display maze provided in URI query
 
 	$("#maze").on("click", function(ev){
+		ev.preventDefault();
 		// get the click coordinates relative to the canvas
 		var off = $("#maze").offset();
 		var relX = ev.pageX - off.left, relY = ev.pageY - off.top;

@@ -2,8 +2,8 @@
 
 var themeBasic = {
 
-	tileW: 50,
-	tileH: 50,
+	tileSize: 50,
+	tilePad: 2,
 	margin: 10,
 
 	current: {},
@@ -18,9 +18,11 @@ var themeBasic = {
 		this.current.offsets = this.offsets(cSize, mSize);
 	},
 
-	minSize: function(mSize) {
-		var w = (mSize[0] * this.tileW) + (2 * this.margin);
-		var h = (mSize[1] * this.tileH) + (2 * this.margin);
+	minSize: function(mSize, b) {
+		// if b, add 2 to mSize width and height to include border
+		b = b ? 2 : 0;
+		var w = ((mSize[0] + b) * this.tileSize) + (2 * this.margin);
+		var h = ((mSize[1] + b) * this.tileSize) + (2 * this.margin);
 		return [w, h];
 	},
 
@@ -36,10 +38,12 @@ var themeBasic = {
 	at: function(x, y) {
 		// call prep(cSize, mSize) before calling at(x, y)
 		// returns tile coordinates at pixel (x, y)
-		x = Math.floor((x - this.current.offsets[0]) / this.tileW);
-		y = Math.floor((y - this.current.offsets[1]) / this.tileH);
+		x = Math.floor((x - this.current.offsets[0]) / this.tileSize);
+		y = Math.floor((y - this.current.offsets[1]) / this.tileSize);
 		return [x, y];
 	},
+
+/* ********************************** */
 
 	drawMatte: function(c2d, maze) {
 		// simply clear the entire canvas
@@ -52,36 +56,79 @@ var themeBasic = {
 		// translate for drawing the maze in centre of canvas
 		c2d.translate(this.current.offsets[0], this.current.offsets[1]);
 
-		// draw grid
-		c2d.fillStyle = 'black';
-		c2d.strokeStyle = 'black';
-		c2d.lineCap = 'round';
-		c2d.beginPath();
-		for (var x = 0; x <= maze.width; x++) {
-			var level = x * this.tileW;
-			c2d.moveTo(level, 0);
-			c2d.lineTo(level, maze.height * this.tileH);
+		for (var x = -1; x <= maze.width; x++) {
+			for (var y = -1; y <= maze.height; y++) {
+				c2d.save();
+				// translate for drawing tile
+				c2d.translate(x * this.tileSize, y * this.tileSize);
+				this.drawTile(c2d, maze.get([x, y]));
+				c2d.restore();
+			}
 		}
-		for (var y = 0; y <= maze.height; y++) {
-			var level = y * this.tileH;
-			c2d.moveTo(0, level);
-			c2d.lineTo(maze.width * this.tileW, level);
-		}
-		c2d.closePath();
-		c2d.stroke();
-		c2d.fill();
 
 		c2d.restore();
 	},
 
-	drawTile: function(c2d, x, y, tile) {
+	drawTile: function(c2d, tile) {
+
+		if (tile.locked) {
+			c2d.fillStyle = "yellow";
+			c2d.fillRect(0, 0, this.tileSize, this.tileSize);
+		}
+
+		// draw grid
+		c2d.strokeStyle = "lightgrey";
+		c2d.strokeRect(0, 0, this.tileSize, this.tileSize);
+
+		if (tile.border) {
+			c2d.fillStyle = "darkgrey";
+			this.drawBlock(c2d);
+
+		} else {
+			if (tile.blocked) {
+				c2d.fillStyle = "grey";
+				this.drawBlock(c2d);
+
+			} else if (tile.ground) {
+				c2d.fillStyle = "tan";
+				this.drawPatch(c2d, 5);
+		
+			} else {
+				c2d.fillStyle = "lightblue";
+				this.drawPatch(c2d, 4);
+			}
+		}
+
+		if (tile.entry) {
+			c2d.fillStyle = "green";
+			this.drawBlock(c2d);
+		} else if (tile.exit) {
+			c2d.fillStyle = "orange";
+			this.drawBlock(c2d);
+		}
+
 	},
+
+	drawBlock: function(c2d) {
+		var pad = this.tilePad, ded = this.tileSize - (pad * 2);
+		c2d.fillRect(pad, pad, ded, ded);
+	},
+
+	drawPatch: function(c2d, steps) {
+		var step = (this.tileSize - (this.tilePad * 2)) / steps;
+		c2d.save();
+		c2d.translate(this.tilePad, this.tilePad);
+		for (var x = 0; x < steps; x++) {
+			for (var y = x % 2; y < steps; y += 2) {
+				c2d.fillRect(x * step, y * step, step, step);
+			}
+		}
+		c2d.restore();
+	},
+
+/* ********************************** */
 
 	drawSolns: function(c2d, solns) {
-	},
-
-	flipTile: function(c2d, x, y, fromTile, toTile) {
-		this.drawTile(c2d, x, y, toTile);
-	},
+	}
 
 };
