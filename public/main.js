@@ -63,10 +63,6 @@ function redraw(canvas, theme, m) {
 	theme.drawMaze(c2d, m);
 }
 
-function clickTile(at, metac) {
-	showStatus("clicked " + at + " using " + metac + " meta keys", 2000);
-}
-
 function showStatus(mesg, timeout) {
 	var d = $("<p/>").text(mesg).appendTo("#info");
 	var fadeRemove = function() {
@@ -75,6 +71,8 @@ function showStatus(mesg, timeout) {
 	d.on("click", fadeRemove);
 	if (!!timeout) setTimeout(fadeRemove, timeout);
 }
+
+/* ********************************** */
 
 /* thanks http://stackoverflow.com/a/2880929/1597274 */
 var urlParams = {};
@@ -109,8 +107,10 @@ $(function(){
 		var relX = ev.pageX - off.left, relY = ev.pageY - off.top;
 		// doesn't matter which keys; just count how many at once
 		var metaCount = ev.altKey + ev.ctrlKey + ev.shiftKey;
-		// pass only what's needed to clickTile
-		clickTile(config.theme.at(relX, relY), metaCount);
+		// pass only what's needed
+		maze.click(config.theme.at(relX, relY), metaCount);
+		// show any changes
+		redraw();
 	});
 
 	$(window).on("resize", refit);

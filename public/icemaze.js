@@ -59,6 +59,7 @@ Maze.prototype = {
 		var tile = this.get(at);
 		tile[attr] = !tile[attr];
 		this.set(at, tile);
+		return tile[attr];
 	},
 
 	setEntry: function(at) {
@@ -72,6 +73,25 @@ Maze.prototype = {
 		// entry and exit may not occupy the same position
 		if (this.isMutable(at, true) && !this.get(at).entry) {
 			this.exit = at;
+		}
+	},
+
+	click: function(at, metac) {
+		if (!this.isMutable(at)) return;
+		switch (metac) {
+		default:
+		case 0:
+			this.toggle(at, "blocked");
+			showStatus("toggle block at " + at, 2000);
+			break;
+		case 1:
+			this.toggle(at, "ground");
+			showStatus("toggle ground at " + at, 2000);
+			break;
+		case 2:
+			var locked = this.toggle(at, "locked");
+			showStatus((locked ? "" : "un") + "lock tile at " + at, 2000);
+			break;
 		}
 	}
 
