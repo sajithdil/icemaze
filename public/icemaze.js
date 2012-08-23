@@ -25,7 +25,7 @@ Maze.prototype = {
 	get: function(at) {
 		var x = at[0], y = at[1], tile = ((this.cells[x]||[])[y])||{};
 		$.extend(tile, {x: x, y: y,
-			border: x < 0 || x >= this.width || y < 0 || y > this.height,
+			border: x < 0 || x >= this.width || y < 0 || y >= this.height,
 			entry:  x == this.entry[0] && y == this.entry[1],
 			exit:   x == this.exit[0] && y == this.exit[1]
 		});
