@@ -10,23 +10,29 @@ front-end features
     (e.g. original Pokémon GS Ice Path)
   * "Print" function
 
+
 * reposition entrance/exit
   * drag-and-drop would be ideal
+
 
 * resize capability
   * extend/crop any edge
   * decide maximum width/height
 
+
 * play capability
   * arrow keys to navigate from entry to exit
   * wait for theme to finish any animation
 
+
 * display statistics from [analysis](#analyze)
+
 
 * init from URL query
   * init with specified theme
   * init with specified example maze
   * init with encoded maze
+
 
 * basic theme
   * draw a simple matte
@@ -34,6 +40,7 @@ front-end features
   * entrance/exit on border should show direction into or out from maze
   * draw [solve](#solve) results
   * play mode, draw avatar, simple slide animation
+
 
 * Pokémon GS theme
   * scroll through alternative sprites via modulo `maze.special`
@@ -50,6 +57,7 @@ back-end features
   * detect solutions, shortest solution, dead-ends, and traps
   * return results to client
 
+
 * <a id="analyze"></a>analyze
   * number of **linear solutions** (paths without redundant loops)
   * analyze the shortest solution as follows...
@@ -59,6 +67,7 @@ back-end features
   * indirection of paths to dead-ends and traps (too short is obvious)
   * return results to client
 
+
 * randomize
   * do not randomize entry/exit positions (must manually reposition)
   * respect tile locks
@@ -66,6 +75,7 @@ back-end features
   * generate a pool of random mazes, choose the best, and return to client
     within the 30-second deadline for HTTP requests on
     [Google App Engine](https://developers.google.com/appengine/)
+
 
 * optimize criteria
   * min and max number of linear solutions (no redundant loops);
