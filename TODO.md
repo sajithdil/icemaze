@@ -5,11 +5,20 @@ front-end features
 ------------------
 
 ### menus
+  * button to toggle "Play"/"Edit"
   * drop-down to choose theme
-  * drop-down to load predefined example mazes
-    (e.g. original Pokémon GS Ice Path)
+  * "Load" drop-down
+    * "Examples" sub-menu to load predefined mazes
+      (e.g. original Pokémon GS Ice Path)
+    * "Saved" sub-menu to access mazes in browser storage, sorted by date
+    * input field with "Decode" button
+  * "Save" drop-down
+    * "Save to browser storage"
+    * read-only text field with URL including encoded maze and "Copy" button
   * "Print" function
-  * display statistics from [analysis](#analyze)
+  * "Stats" displays statistics from [analysis](#analyze)
+  * "About" displays dialog with a link to project on github,
+    and a "How to Play" button
   * let [Bootstrap](http://twitter.github.com/bootstrap/)
     handle the buttons and menus
 
@@ -22,12 +31,16 @@ front-end features
 
 ### play capability
   * arrow keys to navigate from entry to exit
-  * wait for theme to finish any animation
+  * wait for theme to finish any animation;
+    perhaps theme movePlayer-like methods return ms for anim,
+    main waits ms before ready for next key input,
+    or else theme may queue the moves
 
 ### init from URL query
   * init with specified theme
   * init with specified example maze
   * init with encoded maze
+  * init to play mode, optional "How to Play" dialog
 
 ### basic theme
   * draw a simple matte
@@ -97,4 +110,4 @@ special features
 
 * for PkmnGS theme, animated matte during play
 
-* isometric theme (possibly some _FF Tactics Advance_ tiles)
+* isometric theme (possibly some _FF Tactics Advance_ sprites)
