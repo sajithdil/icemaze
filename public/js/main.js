@@ -89,6 +89,9 @@ var urlParams = {};
 
 $(function(){
 
+	// JavaScript enabled; show the menu
+	$("#menu").show();
+
 	// TODO check whether canvas and 2d drawing context is supported
 
 	// TODO initialize themes

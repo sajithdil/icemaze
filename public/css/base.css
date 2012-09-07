@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Reenie+Beanie);
+/* base.css */
 
 #menu {
 	position: fixed;
@@ -6,8 +6,9 @@
 	left: 0;
 	width: 100%;
 	height: auto; /* will be used later to set top margin of #wrap */
-
-	font-family: 'Reenie Beanie', arial, serif;
+	margin: 0;
+	padding: 0 1em;
+	display: none; /* in case of noscript */
 
 	border-bottom: thin solid red;
 }
@@ -23,6 +24,7 @@
 }
 
 #info p {
+	/* status/activity messages */
 	margin: 1px;
 	padding: 1ex;
 
@@ -33,9 +35,13 @@
 }
 
 #wrap {
-	overflow: auto;
+	overflow: auto; /* scrollbars on #wrap in case of large #maze */
 }
 
 #maze {
 	display: inline-block;
+}
+
+p.sorrryy {
+	margin: 1em;
 }
