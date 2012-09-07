@@ -17,10 +17,10 @@ front-end features
     * read-only text field with URL including encoded maze and "Copy" button
   * "Print" function
   * "Stats" displays statistics from [analysis](#analyze)
-  * "About" displays dialog with a link to project on github,
-    and a "How to Play" button
-  * let [Bootstrap](http://twitter.github.com/bootstrap/)
-    handle the buttons and menus
+  * "Help" drop-down
+    * "How to Edit" dialog
+    * "How to Play" dialog
+    * "About" dialog with a link to project on github
 
 ### reposition entrance/exit
   * drag-and-drop would be ideal

@@ -12,8 +12,67 @@
 </div>
 
 <div id="menu">
-	<p>Testing</p>
-</div>
+	<div class="btn-toolbar">
+
+		<!-- MAZE -->
+		<div class="btn-group">
+			<a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">
+				Maze <span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu">
+				<li><a tabindex="-1" href="#">New...</a></li>
+				<li class="dropdown-submenu">
+					<a tabindex="-1" href="#">Load...</a>
+					<ul class="dropdown-menu">
+						<li class="dropdown-submenu">
+							<a tabindex="-1" href="#">Examples</a>
+							<ul class="dropdown-menu">
+								<li><a tabindex="-1" href="#">None</a></li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li><a tabindex="-1" href="#">Save...</a></li>
+				<li class="divider"></li>
+				<li><a tabindex="-1" href="#">Solve</a></li>
+				<li><a tabindex="-1" href="#">Stats</a></li>
+				<li class="divider"></li>
+				<li><a tabindex="-1" href="#">Print...</a></li>
+			</ul>
+		 </div>
+
+		<!-- MODE -->
+		<div class="btn-group" data-toggle="buttons-radio">
+			<button type="button" class="btn btn-mini active">Edit</button>
+			<button type="button" class="btn btn-mini">Play</button>
+		</div>
+
+		<!-- EDIT -->
+		<div class="btn-group">
+			<a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">
+				Edit <span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu">
+				<li><a tabindex="-1" href="#">Clear All Locks</a></li>
+				<li><a tabindex="-1" href="#">Show Solutions</a></li>
+			</ul>
+		 </div>
+
+		 <!-- HELP -->
+		 <div class="btn-group">
+			<a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">
+				Help <span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu">
+				<li><a tabindex="-1" href="#">How to Edit</a></li>
+				<li><a tabindex="-1" href="#">How to Play</a></li>
+				<li class="divider"></li>
+				<li><a tabindex="-1" href="#">About</a></li>
+			</ul>
+		 </div>
+
+	</div>
+</div><!-- /menu -->
 
 <div id="wrap">
 	<canvas id="maze">
