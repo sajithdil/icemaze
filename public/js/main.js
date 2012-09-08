@@ -15,6 +15,17 @@ var maze = new Maze([10, 10]);
 
 /* ********************************** */
 
+function setMode(mode) {
+	if (config.mode == mode) {
+		return;
+	}
+	config.mode = mode;
+	// TODO prep theme for new mode
+	// TODO begin play if now in play mode
+}
+
+/* ********************************** */
+
 function refit() {
 	var menu = $("#menu"), wrapper = $("#wrap"), canvas = $("#maze");
 
@@ -96,13 +107,24 @@ $(function(){
 
 	// TODO initialize themes
 
-	// TODO load themes list into UI selectable
+	// TODO load themes list into menu
+
+	// TODO load saved mazes into menu
 
 	// TODO check URI query for initial config
 
 	// TODO check connection with server
 
 	// TODO decode and display maze provided in URI query
+
+	$("#edit-mode").on("click", function(ev){
+		setMode("edit");
+		$("#edit-menu").show();
+	});
+	$("#play-mode").on("click", function(ev){
+		setMode("play");
+		$("#edit-menu").hide();
+	});
 
 	$("#maze").on("click", function(ev){
 		ev.preventDefault();
