@@ -5,18 +5,15 @@ front-end features
 ------------------
 
 ### menus
-  * button to toggle "Play"/"Edit"
-  * drop-down to choose theme
-  * "Load" drop-down
-    * "Examples" sub-menu to load predefined mazes
-      (e.g. original Pokémon GS Ice Path)
-    * "Saved" sub-menu to access mazes in browser storage, sorted by date
-    * input field with "Decode" button
-  * "Save" drop-down
-    * "Save to browser storage"
-    * read-only text field with URL including encoded maze and "Copy" button
+  * load themes into "Maze" -> "Theme"
+  * load examples into "Maze" -> "Load" -> "Examples"
+  * load mazes from localStorage into "Maze" -> "Load" -> "Saved"
+  * load "Decode" function
+  * save functions (save in slots, using names, or using date+time?)
+  * save "Encode" function
   * "Print" function
-  * "Stats" displays statistics from [analysis](#analyze)
+  * "Solve" function
+  * "Analyze" function to display statistics from [analysis](#analyze)
   * "Help" drop-down
     * "How to Edit" dialog
     * "How to Play" dialog

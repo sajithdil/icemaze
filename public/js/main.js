@@ -1,5 +1,9 @@
 /* main.js with very minimal error-checking */
 
+var arrow = {
+	left: 37, up: 38, right: 39, down: 40
+};
+
 var themes = {
 	"Basic theme": themeBasic,
 	"Pokémon Gold/Silver theme": themePkmnGS,
@@ -7,6 +11,7 @@ var themes = {
 
 var config = {
 	theme: themeBasic,
+	statusTimeout: 2000,
 };
 
 // begin with a blank maze
@@ -16,12 +21,63 @@ var maze = new Maze([10, 10]);
 /* ********************************** */
 
 function setMode(mode) {
-	if (config.mode == mode) {
-		return;
+	if (config.mode == mode) return;
+
+	if (mode == "play") {
+		config.mode = "play";
+
+		$("#play-mode").addClass("active");
+		$("#play-menu").show();
+
+		$("#edit-mode").removeClass("active");
+		$("#edit-menu").hide();
+
+		showStatus("mode: play");
+	} else {
+		// edit is default mode
+		config.mode = "edit";
+
+		$("#edit-mode").addClass("active");
+		$("#edit-menu").show();
+
+		$("#play-mode").removeClass("active");
+		$("#play-menu").hide();
+
+		showStatus("mode: edit");
 	}
-	config.mode = mode;
+
 	// TODO prep theme for new mode
 	// TODO begin play if now in play mode
+}
+
+function setTheme(theme) {
+}
+
+function loadDecode(code) {}
+
+function loadExample(index) {}
+
+function edit(ev) {
+	ev.preventDefault();
+	if (config.mode != "edit") return;
+	// get the click coordinates relative to the canvas
+	var off = $("#maze").offset();
+	var relX = ev.pageX - off.left, relY = ev.pageY - off.top;
+	// doesn't matter which keys; just count how many at once
+	var metaCount = ev.altKey + ev.ctrlKey + ev.shiftKey;
+	// pass only what's needed
+	maze.click(config.theme.at(relX, relY), metaCount);
+	// show any changes
+	redraw();
+}
+
+function play(ev) {
+	ev.preventDefault();
+	if (config.mode != "play") return;
+	if (config.anim) return; // anim blocks further moves
+	// TODO check whether move is valid
+	// TODO tell theme where to move the player
+	// TODO wait until theme is finished animating
 }
 
 /* ********************************** */
@@ -80,7 +136,7 @@ function showStatus(mesg, timeout) {
 		d.fadeOut("slow", function() { d.remove(); });
 	};
 	d.on("click", fadeRemove);
-	if (!!timeout) setTimeout(fadeRemove, timeout);
+	setTimeout(fadeRemove, timeout || config.statusTimeout);
 }
 
 /* ********************************** */
@@ -103,6 +159,15 @@ $(function(){
 	// JavaScript enabled; show the menu
 	$("#menu").show();
 
+	// check connection with server
+	$.get("ack")
+	.error(function() {
+		showStatus("server: no connection");
+	})
+	.success(function() {
+		showStatus("server: ready");
+	});
+
 	// TODO check whether canvas and 2d drawing context is supported
 
 	// TODO initialize themes
@@ -112,32 +177,22 @@ $(function(){
 	// TODO load saved mazes into menu
 
 	// TODO check URI query for initial config
+	setMode(urlParams.mode || config.mode || "edit");
+	//setTheme(urlParams.theme);
 
-	// TODO check connection with server
+	if (urlParams.maze) {
+		// TODO decode given maze
+	} else if (urlParams.eg) {
+		// TODO load example
+	}
 
-	// TODO decode and display maze provided in URI query
+	// add menu handlers
+	$("#edit-mode").on("click", function(ev){ setMode("edit"); });
+	$("#play-mode").on("click", function(ev){ setMode("play"); });
 
-	$("#edit-mode").on("click", function(ev){
-		setMode("edit");
-		$("#edit-menu").show();
-	});
-	$("#play-mode").on("click", function(ev){
-		setMode("play");
-		$("#edit-menu").hide();
-	});
-
-	$("#maze").on("click", function(ev){
-		ev.preventDefault();
-		// get the click coordinates relative to the canvas
-		var off = $("#maze").offset();
-		var relX = ev.pageX - off.left, relY = ev.pageY - off.top;
-		// doesn't matter which keys; just count how many at once
-		var metaCount = ev.altKey + ev.ctrlKey + ev.shiftKey;
-		// pass only what's needed
-		maze.click(config.theme.at(relX, relY), metaCount);
-		// show any changes
-		redraw();
-	});
+	// add maze handlers
+	$("#maze").on("click", edit);
+	$(document).on("keydown", play);
 
 	$(window).on("resize", refit);
 	refit();

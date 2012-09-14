@@ -82,15 +82,15 @@ Maze.prototype = {
 		default:
 		case 0:
 			this.toggle(at, "blocked");
-			showStatus("toggle block at " + at, 2000);
+			showStatus("toggle block at " + at);
 			break;
 		case 1:
 			this.toggle(at, "ground");
-			showStatus("toggle ground at " + at, 2000);
+			showStatus("toggle ground at " + at);
 			break;
 		case 2:
 			var locked = this.toggle(at, "locked");
-			showStatus((locked ? "" : "un") + "lock tile at " + at, 2000);
+			showStatus((locked ? "" : "un") + "lock tile at " + at);
 			break;
 		}
 	}
