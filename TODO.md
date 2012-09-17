@@ -108,3 +108,28 @@ special features
 * for PkmnGS theme, animated matte during play
 
 * isometric theme (possibly some _FF Tactics Advance_ sprites)
+
+scraps
+------
+
+```
+function ThemeBasic(c2d, maze) {
+  if (!(this instanceof ThemeBasic))
+    return new ThemeBasic(c2d, maze);
+  // TODO restructure
+}
+```
+
+```
+isPassable: function(at) {
+  if (!this.isMutable(at)) return false;
+  return this.is(at, {blocked: false})
+    || this.is(at, {entry: true})
+    || this.is(at, {exit: true});
+},
+```
+
+```
+// only go one step on ground
+if (this.is(from, {ground: true})) break;
+```

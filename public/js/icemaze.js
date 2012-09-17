@@ -33,6 +33,16 @@ Maze.prototype = {
 		return tile;
 	},
 
+	is: function(at, attrs) {
+		var tile = this.get(at);
+		for (var a in attrs) {
+			if (tile[a] != attrs[a]) {
+				return false;
+			}
+		}
+		return true;
+	},
+
 	isMutable: function(at, orEntryExit) {
 		var x = at[0], y = at[1];
 		var within = x >= 0 && x < this.width && y >= 0 && y < this.height;
@@ -102,6 +112,52 @@ Maze.prototype = {
 			showStatus((locked ? "" : "un") + "lock tile at " + at);
 			break;
 		}
+	},
+
+	isPassable: function(at) {
+		if (!this.isMutable(at, true)) {
+			return false;
+		}
+		var tile = this.get(at);
+		return !(tile.blocked || tile.border) || tile.entry || tile.exit;
+	},
+
+	getPath: function(from, dir) {
+		var path = [from];
+
+		while (true) {
+			// get the next step
+			switch (dir) {
+			case "left":
+				from = [from[0] - 1, from[1]];
+				break;
+			case "up":
+				from = [from[0], from[1] - 1];
+				break;
+			case "right":
+				from = [from[0] + 1, from[1]];
+				break;
+			case "down":
+				from = [from[0], from[1] + 1];
+				break;
+			default:
+				// unrecognized direction; can't move
+				throw new Error("unrecognized direction " + dir);
+			}
+
+			if (this.isPassable(from)) {
+				path.push(from);
+			} else {
+				break;
+			}
+
+			// only go one step on ground
+			if (this.get(from).ground) {
+				break;
+			}
+		}
+
+		return path;
 	}
 
 };

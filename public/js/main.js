@@ -1,7 +1,7 @@
 /* main.js with very minimal error-checking */
 
-var arrow = {
-	left: 37, up: 38, right: 39, down: 40
+var dirs = {
+	37: "left", 38: "up", 39: "right", 40: "down"
 };
 
 var themes = {
@@ -33,6 +33,8 @@ function setMode(mode) {
 
 		$("#edit-mode").removeClass("active");
 		$("#edit-menu").hide();
+
+		restart();
 
 		showStatus("mode: play");
 	} else {
@@ -89,9 +91,43 @@ function play(ev) {
 		return;
 	}
 
-	// TODO check whether move is valid
-	// TODO tell theme where to move the player
-	// TODO wait until theme is finished animating
+	// get the move path (even if it goes nowhere)
+	var direction = dirs[ev.which];
+	if (!direction) {
+		// ignore unrecognized keys
+		return;
+	}
+	var path = maze.getPath(config.playerAt, direction);
+	var endpoint = path[path.length - 1];
+
+	// check win
+	var winner = maze.is(endpoint, {exit: true});
+
+	// tell theme where to move the player
+	var c2d = $("#maze").get(0).getContext("2d");
+	var anims = config.theme.drawPlayerMove(c2d, direction, path);
+
+	// wait until theme is finished animating
+	config.anim = setTimeout(function() {
+		config.playerAt = endpoint;
+		delete config.anim;
+		if (winner) {
+			// TODO report
+		}
+	}, anims);
+
+	showStatus("moving to " + endpoint + (winner ? " = WIN!" : ""));
+}
+
+function restart() {
+	if (config.anim) {
+		clearTimeout(config.anim);
+		delete config.anim;
+	}
+	config.playerAt = maze.entry;
+
+	var c2d = $("#maze").get(0).getContext("2d");
+	config.theme.drawPlayerAt(c2d, maze.entry);
 }
 
 /* ********************************** */
@@ -203,6 +239,7 @@ $(function(){
 	// add menu handlers
 	$("#edit-mode").on("click", function(ev){ setMode("edit"); });
 	$("#play-mode").on("click", function(ev){ setMode("play"); });
+	$("#restart").on("click", restart);
 
 	// add maze handlers
 	$("#maze").on("click", edit);

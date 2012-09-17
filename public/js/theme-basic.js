@@ -129,6 +129,14 @@ var themeBasic = {
 /* ********************************** */
 
 	drawSolns: function(c2d, solns) {
+	},
+
+/* ********************************** */
+
+	drawPlayerAt: function(c2d, coords) {
+	},
+
+	drawPlayerMove: function(c2d, dir, path) {
 	}
 
 };
