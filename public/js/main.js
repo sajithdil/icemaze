@@ -21,7 +21,9 @@ var maze = new Maze([10, 10]);
 /* ********************************** */
 
 function setMode(mode) {
-	if (config.mode == mode) return;
+	if (config.mode == mode) {
+		return;
+	}
 
 	if (mode == "play") {
 		config.mode = "play";
@@ -59,22 +61,34 @@ function loadExample(index) {}
 
 function edit(ev) {
 	ev.preventDefault();
-	if (config.mode != "edit") return;
+	if (config.mode != "edit") {
+		return;
+	}
+
 	// get the click coordinates relative to the canvas
 	var off = $("#maze").offset();
 	var relX = ev.pageX - off.left, relY = ev.pageY - off.top;
+
 	// doesn't matter which keys; just count how many at once
 	var metaCount = ev.altKey + ev.ctrlKey + ev.shiftKey;
+
 	// pass only what's needed
 	maze.click(config.theme.at(relX, relY), metaCount);
+
 	// show any changes
 	redraw();
 }
 
 function play(ev) {
 	ev.preventDefault();
-	if (config.mode != "play") return;
-	if (config.anim) return; // anim blocks further moves
+	if (config.mode != "play") {
+		return;
+	}
+	if (config.anim) {
+		// block further moves during animation
+		return;
+	}
+
 	// TODO check whether move is valid
 	// TODO tell theme where to move the player
 	// TODO wait until theme is finished animating

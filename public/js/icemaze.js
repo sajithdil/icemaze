@@ -2,8 +2,9 @@
 
 function Maze(data) {
 	// in case I forget to type "new"
-	if (!(this instanceof Maze))
+	if (!(this instanceof Maze)) {
 		return new Maze(data);
+	}
 
 	// check whether data is Array or Object
 	if ($.isArray(data)) {
@@ -35,7 +36,9 @@ Maze.prototype = {
 	isMutable: function(at, orEntryExit) {
 		var x = at[0], y = at[1];
 		var within = x >= 0 && x < this.width && y >= 0 && y < this.height;
-		if (within || !orEntryExit) return within;
+		if (within || !orEntryExit) {
+			return within;
+		}
 
 		// entry and exit may be positioned on the border,
 		// but not on the border corners
@@ -45,21 +48,25 @@ Maze.prototype = {
 			|| ((borderN || borderS) && !(borderW || borderE));
 	},
 
-	set: function(at, to) {
-		if (!this.isMutable(at)) return;
+	set: function(at, attrs) {
+		if (!this.isMutable(at)) {
+			return;
+		}
 		var x = at[0], y = at[1];
 		// create the column in this.cells if not yet defined
 		var col = this.cells[x] || (this.cells[x] = []);
 		var tile = col[y] || {};
-		$.extend(tile, to);
+		for (var a in attrs) {
+			tile[a] = attrs[a];
+		}
 		this.cells[x][y] = tile;
 	},
 
 	toggle: function(at, attr) {
-		var tile = this.get(at);
-		tile[attr] = !tile[attr];
-		this.set(at, tile);
-		return tile[attr];
+		var t = {};
+		t[attr] = !this.get(at)[attr];
+		this.set(at, t);
+		return t[attr];
 	},
 
 	setEntry: function(at) {
@@ -77,7 +84,9 @@ Maze.prototype = {
 	},
 
 	click: function(at, metac) {
-		if (!this.isMutable(at)) return;
+		if (!this.isMutable(at)) {
+			return;
+		}
 		switch (metac) {
 		default:
 		case 0:
