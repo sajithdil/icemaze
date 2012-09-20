@@ -5,61 +5,133 @@ var dirs = {
 };
 
 var themes = {
-	"Basic theme": themeBasic,
+	"Basic theme": ThemeBasic,
 	"Pokémon Gold/Silver theme": themePkmnGS,
 };
 
+var defaults = {
+	mode: "edit",
+	themeName: "Basic theme",
+};
+
 var config = {
-	theme: themeBasic,
 	statusTimeout: 2000,
 };
 
 // begin with a blank maze
-// TODO instead use a random maze on startup
 var maze = new Maze([10, 10]);
+
+var theme;
+
+/* ********************************** */
+
+function newMaze(w, h) {
+	maze = new Maze([w, h]);
+	resetTheme();
+	restartMode();
+}
+
+function loadDecode(code) {
+}
+
+function loadExample(index) {
+}
+
+/* ********************************** */
+
+function setTheme(name) {
+	if (!(name in themes)) {
+		showStatus("error: no such theme: " + name);
+		return;
+	}
+
+	config.themeName = name;
+	showStatus("theme: " + name);
+
+	if (theme) {
+		// unload previous theme
+		theme.fini();
+	}
+
+	// load new theme
+	var c2d = $("#maze").get(0).getContext("2d");
+	theme = themes[config.themeName](c2d, maze);
+
+	// ensure canvas size meets needs of current theme
+	refit(); // will invoke theme.prep
+}
+
+function resetTheme() {
+	setTheme(config.themeName);
+}
 
 /* ********************************** */
 
 function setMode(mode) {
-	if (config.mode == mode) {
+	if (!(maze && theme)) {
+		// both are required to continue
 		return;
 	}
 
-	if (mode == "play") {
-		config.mode = "play";
-
-		$("#play-mode").addClass("active");
-		$("#play-menu").show();
-
-		$("#edit-mode").removeClass("active");
-		$("#edit-menu").hide();
-
-		restart();
-
-		showStatus("mode: play");
-	} else {
-		// edit is default mode
-		config.mode = "edit";
-
-		$("#edit-mode").addClass("active");
-		$("#edit-menu").show();
-
-		$("#play-mode").removeClass("active");
-		$("#play-menu").hide();
-
-		showStatus("mode: edit");
+	// stop any animations
+	theme.stop();
+	if (config.anim) {
+		delete config.anim;
 	}
 
-	// TODO prep theme for new mode
-	// TODO begin play if now in play mode
+	if (theme.setSecret) {
+		theme.setSecret(mode);
+	}
+
+	// update UI/menus
+	switch (mode) {
+
+	case "edit":
+		$("#edit-mode").addClass("active");
+		$("#edit-menu").show();
+		$("#play-mode").removeClass("active");
+		$("#play-menu").hide();
+		break;
+
+	default:
+		// secrets are for play
+		mode = "play";
+	case "play":
+		$("#play-mode").addClass("active");
+		$("#play-menu").show();
+		$("#edit-mode").removeClass("active");
+		$("#edit-menu").hide();
+		break;
+
+	}
+
+	config.mode = mode;
+	showStatus("mode: " + mode);
+
+	theme.start(mode);
+
+	switch (mode) {
+
+	case "edit":
+		// no configuration state to reset
+		theme.redraw();
+		break;
+
+	case "play":
+		// reposition player at beginning
+		config.playerAt = maze.entry;
+		theme.redraw();
+		theme.drawPlayerAt(config.playerAt);
+		break;
+
+	}
 }
 
-function setTheme(theme) {
+function restartMode() {
+	setMode(config.mode);
 }
 
-function loadDecode(code) {}
-
-function loadExample(index) {}
+/* ********************************** */
 
 function edit(ev) {
 	ev.preventDefault();
@@ -75,10 +147,10 @@ function edit(ev) {
 	var metaCount = ev.altKey + ev.ctrlKey + ev.shiftKey;
 
 	// pass only what's needed
-	maze.click(config.theme.at(relX, relY), metaCount);
+	maze.click(theme.at(relX, relY), metaCount);
 
 	// show any changes
-	redraw();
+	theme.redraw();
 }
 
 function play(ev) {
@@ -104,30 +176,16 @@ function play(ev) {
 	var winner = maze.is(endpoint, {exit: true});
 
 	// tell theme where to move the player
-	var c2d = $("#maze").get(0).getContext("2d");
-	var anims = config.theme.drawPlayerMove(c2d, direction, path);
-
-	// wait until theme is finished animating
-	config.anim = setTimeout(function() {
+	config.anim = true;
+	theme.drawPlayerMove(direction, path, function() {
 		config.playerAt = endpoint;
-		delete config.anim;
+		config.anim = false;
 		if (winner) {
 			// TODO report
 		}
-	}, anims);
+	});
 
 	showStatus("moving to " + endpoint + (winner ? " = WIN!" : ""));
-}
-
-function restart() {
-	if (config.anim) {
-		clearTimeout(config.anim);
-		delete config.anim;
-	}
-	config.playerAt = maze.entry;
-
-	var c2d = $("#maze").get(0).getContext("2d");
-	config.theme.drawPlayerAt(c2d, maze.entry);
 }
 
 /* ********************************** */
@@ -142,13 +200,14 @@ function refit() {
 
 	// resize the canvas to at least fill the wrapper
 	var wrapperWidth = wrapper.width(), wrapperHeight = wrapper.height();
-	var min = config.theme.minSize([maze.width, maze.height], true), wid, hei;
+	var min = theme.minSize(), wid, hei;
 
 	// at least fill the wrapper width
 	if (min[0] <= wrapperWidth) {
 		wid = wrapperWidth;
 		wrapper.css("overflow-x", "hidden");
 	} else {
+		// theme requires more than wrapper's width
 		wid = min[0];
 		wrapper.css("overflow-x", "scroll");
 	}
@@ -158,6 +217,7 @@ function refit() {
 		hei = wrapperHeight;
 		wrapper.css("overflow-y", "hidden");
 	} else {
+		// theme requires more than wrapper's height
 		hei = min[1];
 		wrapper.css("overflow-y", "scroll");
 	}
@@ -165,19 +225,11 @@ function refit() {
 	// resize the canvas
 	canvas.attr("width", wid).attr("height", hei);
 
-	redraw(canvas);
-}
+	// prep the theme with the new canvas size
+	theme.prep([wid, hei]);
 
-function redraw(canvas, theme, m) {
-	canvas = canvas || $("#maze");
-	theme = theme || config.theme;
-	m = m || maze;
-	// draw matte and maze using the theme
-	var c2d = canvas.get(0).getContext("2d");
-	var cSize = [canvas.attr("width"), canvas.attr("height")];
-	theme.prep(cSize, [m.width, m.height]);
-	theme.drawMatte(c2d, m);
-	theme.drawMaze(c2d, m);
+	// redraw maze in case to reposition in centre of canvas, etc.
+	theme.redraw();
 }
 
 function showStatus(mesg, timeout) {
@@ -226,20 +278,20 @@ $(function(){
 
 	// TODO load saved mazes into menu
 
-	// TODO check URI query for initial config
-	setMode(urlParams.mode || config.mode || "edit");
-	//setTheme(urlParams.theme);
-
+	// extract config from query
 	if (urlParams.maze) {
 		// TODO decode given maze
 	} else if (urlParams.eg) {
 		// TODO load example
 	}
 
+	setTheme(urlParams.theme || defaults.themeName);
+	setMode(urlParams.mode || defaults.mode);
+
 	// add menu handlers
-	$("#edit-mode").on("click", function(ev){ setMode("edit"); });
-	$("#play-mode").on("click", function(ev){ setMode("play"); });
-	$("#restart").on("click", restart);
+	$("#edit-mode").on("click", function(ev) { setMode("edit"); });
+	$("#play-mode").on("click", function(ev) { setMode("play"); });
+	$("#restart").on("click", restartMode);
 
 	// add maze handlers
 	$("#maze").on("click", edit);

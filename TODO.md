@@ -1,6 +1,14 @@
 TO DO
 =====
 
+next
+----
+
+* restructure theme as class (to have constructor with maze param)
+* add basic theme support for play mode
+* support Apple meta keys up to 3
+
+
 front-end features
 ------------------
 
@@ -25,13 +33,6 @@ front-end features
 ### resize capability
   * extend/crop any edge
   * decide maximum width/height
-
-### play capability
-  * arrow keys to navigate from entry to exit
-  * wait for theme to finish any animation;
-    perhaps theme movePlayer-like methods return ms for anim,
-    main waits ms before ready for next key input,
-    or else theme may queue the moves
 
 ### init from URL query
   * init with specified theme
@@ -107,18 +108,12 @@ special features
 
 * for PkmnGS theme, animated matte during play
 
+* touch swipes to navigate during play mode
+
 * isometric theme (possibly some _FF Tactics Advance_ sprites)
 
 scraps
 ------
-
-```
-function ThemeBasic(c2d, maze) {
-  if (!(this instanceof ThemeBasic))
-    return new ThemeBasic(c2d, maze);
-  // TODO restructure
-}
-```
 
 ```
 isPassable: function(at) {
