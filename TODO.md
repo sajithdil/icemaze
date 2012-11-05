@@ -7,6 +7,21 @@ next
 * restructure theme as class (to have constructor with maze param)
 * add basic theme support for play mode
 * support Apple meta keys up to 3
+* rewrite in CoffeeScript for fun learing :D
+
+see http://burakkanber.com/blog/physics-in-javascript-rigid-bodies-part-1-pendulum-clock/
+for tips on accomplishing animation.
+
+window.requestAnimFrame = (function(){
+  return window.requestAnimationFrame  ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame    ||
+    window.oRequestAnimationFrame      ||
+    window.msRequestAnimationFrame     ||
+    function( callback ){
+      window.setTimeout(callback, 1000 / 60);
+    };
+})();
 
 
 front-end features
