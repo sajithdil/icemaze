@@ -4,24 +4,11 @@ TO DO
 next
 ----
 
-* restructure theme as class (to have constructor with maze param)
+* restructure theme as class (which may hold internal refs to canvas and maze)
 * add basic theme support for play mode
 * support Apple meta keys up to 3
-* rewrite in CoffeeScript for fun learing :D
-
-see http://burakkanber.com/blog/physics-in-javascript-rigid-bodies-part-1-pendulum-clock/
-for tips on accomplishing animation.
-
-window.requestAnimFrame = (function(){
-  return window.requestAnimationFrame  ||
-    window.webkitRequestAnimationFrame ||
-    window.mozRequestAnimationFrame    ||
-    window.oRequestAnimationFrame      ||
-    window.msRequestAnimationFrame     ||
-    function( callback ){
-      window.setTimeout(callback, 1000 / 60);
-    };
-})();
+* rewrite in CoffeeScript for fun learning :D
+* rewrite to _disallow_ entry/exit on the outside edges of maze boundaries, to simplify
 
 
 front-end features
@@ -59,7 +46,7 @@ front-end features
   * draw a simple matte
   * improve blocks to seem raised
   * entrance/exit on border should show direction into or out from maze
-  * draw [solve](#solve) results
+  * draw [solve](#solve) results -- red trap, orange dead end, blue escapable, green best, little arrows on dotted oaths
   * play mode, draw avatar, simple slide animation
 
 ### Pokémon GS theme
@@ -76,6 +63,7 @@ back-end features
   * extract directed graph from maze provided by client
   * detect solutions, shortest solution, dead-ends, and traps
   * return results to client
+  * (include this functionality within the CoffeeScript code)
 
 ### <a id="analyze"></a>analyze
   * number of **linear solutions** (paths without redundant loops)
@@ -142,4 +130,21 @@ isPassable: function(at) {
 ```
 // only go one step on ground
 if (this.is(from, {ground: true})) break;
+```
+
+see http://burakkanber.com/blog/physics-in-javascript-rigid-bodies-part-1-pendulum-clock/
+and http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+for tips on accomplishing animation.
+
+```
+window.requestAnimFrame = (function(){
+  return window.requestAnimationFrame  ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame    ||
+    window.oRequestAnimationFrame      ||
+    window.msRequestAnimationFrame     ||
+    function( callback ){
+      window.setTimeout(callback, 1000 / 60);
+    };
+})();
 ```
