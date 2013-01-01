@@ -2,6 +2,6 @@
 src-old
 
 # Vendor
-public/css/bootstrap*
-public/img/glyphicons*
-public/js/vendor
+www/css/bootstrap*
+www/img/glyphicons*
+www/js/vendor

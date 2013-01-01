@@ -1,10 +1,10 @@
-./public/css
-============
+./www/css
+=========
 
 Includes
 --------
 
 ### [Bootstrap](http://twitter.github.com/bootstrap/)
 
-* `bootstrap-2.1.1.min.css`
+* `bootstrap-2.2.2.min.css`
   (default build, for now)

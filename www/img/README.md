@@ -1,5 +1,5 @@
-./public/img
-============
+./www/img
+=========
 
 Includes
 --------
