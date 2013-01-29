@@ -3,8 +3,12 @@
 <head>
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<title>Ice Maze Generator</title>
-	<link rel="stylesheet" href="css/bootstrap-2.1.1.min.css" />
+
+	<title>Ice Maze</title>
+
+	<meta name="viewport" content="width=device-width">
+
+	<link rel="stylesheet" href="css/bootstrap-2.2.2.min.css" />
 	<link rel="stylesheet" href="css/base.css" />
 </head>
 <body>
@@ -100,14 +104,7 @@
 	</div>
 </div><!-- /menu -->
 
-<div id="wrap">
-	<canvas id="maze">
-		<p class="sorrryy">Your browser doesn't support &lt;canvas&gt;
-			&ndash; do you live in the '90s?</p>
-	</canvas>
-</div>
-
-<!-- EDIT modal for Bootstrap -->
+<!-- EDIT modal -->
 <div id="editModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -118,7 +115,7 @@
 	</div>
 </div>
 
-<!-- PLAY modal for Bootstrap -->
+<!-- PLAY modal -->
 <div id="playModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="playModalLabel" aria-hidden="true">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -129,7 +126,7 @@
 	</div>
 </div>
 
-<!-- ABOUT modal for Bootstrap -->
+<!-- ABOUT modal -->
 <div id="aboutModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="aboutModalLabel" aria-hidden="true">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -140,18 +137,22 @@
 	</div>
 </div>
 
+<div id="wrap">
+	<canvas id="maze">
+		<p class="alert alert-error">Your browser doesn't support &lt;canvas&gt;</p>
+	</canvas>
+</div>
+
 <noscript>
-	<p class="sorrryy">JavaScript isn't enabled :(</p>
+	<p class="alert alert-error">JavaScript isn't enabled :(</p>
 </noscript>
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.1.min.js"><\/script>')</script>
-<script src="js/vendor/bootstrap-2.1.1.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.3.min.js"><\/script>')</script>
+<script src="js/vendor/bootstrap-2.2.2.min.js"></script>
 
-<script src="js/icemaze.js"></script>
-<script src="js/theme-basic.js"></script>
-<script src="js/theme-pkmngs.js"></script>
-<script src="js/main.js"></script>
+<!-- cd js; coffee -c -j compiled.js *.coffee -->
+<script src="js/compiled.js"></script>
 
 </body>
 </html>

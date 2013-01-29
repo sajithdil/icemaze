@@ -42,6 +42,6 @@
 	display: inline-block;
 }
 
-p.sorrryy {
-	margin: 1em;
+.alert {
+	margin: 1cm 1cm 0 1cm;
 }
