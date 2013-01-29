@@ -1,60 +1,40 @@
 # IceMaze (c) 2012-2013 by Matt Cudmore
-# compile with: coffee -c -j compiled.js *.coffee
+# compile with: coffee -c -b -j compiled.js icemaze.coffee game.coffee decoder.coffee examples.coffee theme.coffee theme-basic.coffee theme-pkmngs.coffee layout.coffee main.coffee
 
-maze  = null
-mode  = null
-theme = null
-midAnimation = false
-playerPosition  = null
-
-click = (ev)->
-	ev.preventDefault()
-	# only respond to mouse clicks during edit mode
-	return if mode != "edit"
-
-arrow = (ev)->
-	ev.preventDefault()
-	# only respond to arrow keys during play mode
-	return if mode != "play"
-	# block further moves during animation
-	return if midAnimation
-	# get the direction of which arrow key was pressed
-	dirkeys = {37: "left", 38: "up", 39: "right", 40: "down"}
-	direction = dirkeys[ev.which]
-	# ignore unrecognized keys
-	return if not direction
-	# get the movement path (path[0] is the initial player position)
-	path = maze.getPath(playerPosition, direction)
-	endpoint = path[path.length - 1]
-	# is the endpoint a win?
-	winner = maze.is(endpoint, {exit: true})
-	# tell the theme to draw the movement
-	midAnimation = true
-	theme.drawPlayerMove direction, path, ()->
-		playerPosition = endpoint
-		midAnimation = false
-		win() if winner
-	# log the move
-	alert "moving to #{endpoint}"
-	alert "WIN!" if winner
-
-redraw = ()->
-
-help = (topic)->
-	# raise info box
-
-window.alert = (message)->
-	# raise message
+getURLParams = () ->
+	# thanks http://stackoverflow.com/a/2880929/1597274
+	pl     = /\+/g # for replacing addition symbol with a space
+	search = /([^&=]+)=?([^&]*)/g
+	decode = (s) -> decodeURIComponent(s.replace(pl, " "))
+	query  = window.location.search.substring(1)
+	params = {}
+	while match = search.exec query
+		params[decode match[1]] = decode match[2]
+	return params
 
 $ ->
 	# JavaScript enabled; show the menu
 	$("#menu").show()
 
-	# TODO check whether canvas and 2d drawing context is supported
-	# TODO initialize themes
-	# TODO load themes list into menu
-	# TODO load saved mazes into menu
-	# TODO add menu handlers
+	regTheme "Basic", new ThemeBasic, true
+	regTheme "Pokémon GS", new ThemePkmnGS
+
+	args = getURLParams()
+	if args.maze? then loadDecode args.maze
+	else if args.eg? then loadExample args.eg
+	else loadMaze new Maze(10, 10)
+	if args.mode? then setMode args.mode
+	if args.theme? then loadTheme args.theme
+
+	loadThemesMenu()
+	#loadExamplesMenu()
+	#loadStorage()
+	#loadStorageMenus()
+
+	# add menu handlers
+	$("#editMode").on "click", -> setMode "edit"
+	$("#playMode").on "click", -> setMode "play"
+	$("#restart").on "click", replay
 
 	# add maze handlers
 	$("#maze").on "click", click

@@ -2,6 +2,7 @@
 # ThemeBasic to simply draw the maze with no image dependencies
 
 class ThemeBasic extends Theme
+
 	dims:
 		tile:   40 # px for tile width and height
 		pad:     2 # px internal tile padding
@@ -36,3 +37,6 @@ class ThemeBasic extends Theme
 		tileX = Math.floor((drawX - offs[0]) / @dims.tile)
 		tileY = Math.floor((drawY - offs[1]) / @dims.tile)
 		return [tileX, tileY]
+
+	drawMaze: (maze) ->
+		@maze = maze if maze?

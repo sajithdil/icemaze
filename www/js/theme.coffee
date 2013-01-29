@@ -1,11 +1,34 @@
 # IceMaze (c) 2012-2013 by Matt Cudmore
 
+# globals
+themes = {}
+theme = null
+activeThemeName = null
+
+regTheme = (name, t, useAsDefault) ->
+	themes[name] = t
+	loadTheme name if useAsDefault
+	return
+
+loadTheme = (name) ->
+	if not themes[name]
+		alert "Theme #{name} is undefined"
+		return
+
+	# unload previous theme
+	theme.fini() if theme?
+	# load new theme
+	activeThemeName = name
+	alert "Theme: #{name}"
+	theme = themes[name]
+	reprep()
+	refit()
+	return
+
 class Theme
 
-	constructor: (@c2d, @maze) ->
-
-	# each theme may define these maps
-	# images will be pre-loaded by init()
+	# each theme may define these maps;
+	# images will be pre-loaded by the constructor
 	images:  {} # imgID: "filename"
 	sprites: {} # spriteID: [imgID, x, y, wid, hei]
 	tiles:   {} # tileID: [animation mode, array of spriteID values]
@@ -13,34 +36,34 @@ class Theme
 	anim: {}
 	dims: {}
 
-	init: () =>
+	constructor: (@name, useAsDefault) ->
 		# preload images
-		for imgID, imgFile in @images
+		for imgID, imgFile of @images
 			@images[imgID] = img = new Image()
 			img.src = imgFile
 		return
 
-	prep: ({c2d, maze}) =>
+	prep: ({c2d, maze, mode}) =>
 		# update theme configuration
+		@stop()
 		@c2d = c2d if c2d?
 		@maze = maze if maze?
+		@mode = mode if mode?
+		running = true
 		return
 
 	fini: () =>
 		# finished with theme
+		@running = false
 		@stop()
 		delete @c2d
 		delete @maze
 		return
 
-	start: (mode) =>
-		@stop()
-		@mode = mode if mode?
-		@running = true
-		return
+	busy: () =>
+		return @running and @anim.length > 0
 
 	stop: () =>
-		@running = false
 		# stop any animations
 		for animID, t of @anim
 			clearTimeout t

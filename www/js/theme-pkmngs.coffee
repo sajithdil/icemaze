@@ -22,3 +22,6 @@ class ThemePkmnGS extends Theme
 		blocked: ["click", 0]
 		ice:     ["click", 0]
 		ground:  ["click", 0]
+
+	drawMaze: (maze) ->
+		@maze = maze if maze?

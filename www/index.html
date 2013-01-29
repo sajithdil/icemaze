@@ -13,6 +13,12 @@
 </head>
 <body>
 
+<div id="wrap">
+	<canvas id="maze">
+		<p class="alert alert-error">Your browser doesn't support &lt;canvas&gt;</p>
+	</canvas>
+</div>
+
 <div id="info">
 </div>
 
@@ -25,67 +31,71 @@
 				Maze <span class="caret"></span>
 			</a>
 			<ul class="dropdown-menu">
-				<li><a tabindex="-1" href="#">New...</a></li>
+				<li id="newMaze"><a tabindex="-1" href="#">New...</a></li>
 				<li class="dropdown-submenu">
 					<a tabindex="-1" href="#">Load...</a>
 					<ul class="dropdown-menu">
-						<li class="dropdown-submenu">
+						<li id="loadExamples" class="dropdown-submenu">
 							<a tabindex="-1" href="#">Examples</a>
 							<ul class="dropdown-menu">
 								<li class="disabled"><a tabindex="-1" href="#">None</a></li>
 							</ul>
 						</li>
-						<li class="dropdown-submenu">
+						<li id="loadSaved" class="dropdown-submenu">
 							<a tabindex="-1" href="#">Saved</a>
 							<ul class="dropdown-menu">
 								<li class="disabled"><a tabindex="-1" href="#">None</a></li>
 							</ul>
 						</li>
 						<li class="divider"></li>
-						<li><a tabindex="-1" href="#">Decode...</a></li>
+						<li id="loadDecode"><a tabindex="-1" href="#">Decode...</a></li>
 					</ul>
 				</li>
 				<li class="dropdown-submenu">
 					<a tabindex="-1" href="#">Save...</a>
 					<ul class="dropdown-menu">
-						<li><a tabindex="-1" href="#">Save As...</a></li>
-						<li class="dropdown-submenu">
+						<li id="saveAs"><a tabindex="-1" href="#">Save As...</a></li>
+						<li id="saveOverwrite" class="dropdown-submenu">
 							<a tabindex="-1" href="#">Overwrite</a>
 							<ul class="dropdown-menu">
 								<li class="disabled"><a tabindex="-1" href="#">None</a></li>
 							</ul>
 						</li>
 						<li class="divider"></li>
-						<li><a tabindex="-1" href="#">Encode...</a></li>
+						<li id="saveEncode"><a tabindex="-1" href="#">Encode...</a></li>
 					</ul>
 				</li>
 				<li class="divider"></li>
-				<li><a tabindex="-1" href="#">Solve</a></li>
-				<li><a tabindex="-1" href="#">Analyze</a></li>
+				<li id="themes" class="dropdown-submenu">
+					<a tabindex="-1" href="#">Themes</a>
+					<ul class="dropdown-menu">
+						<li class="disabled"><a tabindex="-1" href="#">None</a></li>
+					</ul>
+				</li>
 				<li class="divider"></li>
-				<li><a tabindex="-1" href="#">Print...</a></li>
+				<li id="print"><a tabindex="-1" href="#">Print...</a></li>
 			</ul>
 		 </div>
 
 		<!-- MODE -->
 		<div class="btn-group" data-toggle="buttons-radio">
-			<button id="edit-mode" type="button" class="btn btn-mini">Edit</button>
-			<button id="play-mode" type="button" class="btn btn-mini">Play</button>
+			<button id="editMode" type="button" class="btn btn-mini">Edit</button>
+			<button id="playPode" type="button" class="btn btn-mini">Play</button>
 		</div>
 
 		<!-- EDIT -->
-		<div id="edit-menu" class="btn-group">
+		<div id="editMenu" class="btn-group">
 			<a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">
 				Edit <span class="caret"></span>
 			</a>
 			<ul class="dropdown-menu">
-				<li><a tabindex="-1" href="#">Clear All Locks</a></li>
-				<li><a tabindex="-1" href="#">Show Solutions</a></li>
+				<li id="editClearLocks"><a tabindex="-1" href="#">Clear All Locks</a></li>
+				<li id="editShowSolns"><a tabindex="-1" href="#">Show Solutions</a></li>
 			</ul>
 		 </div>
 
-		 <div id="play-menu" class="btn-group">
-		 	<button id="restart" type="button" class="btn btn-mini">Restart</button>
+		 <div id="playMenu" class="btn-group">
+		 	<button id="playRestart" type="button" class="btn btn-mini">Restart</button>
 		 </div>
 
 		 <!-- HELP -->
@@ -137,12 +147,6 @@
 	</div>
 </div>
 
-<div id="wrap">
-	<canvas id="maze">
-		<p class="alert alert-error">Your browser doesn't support &lt;canvas&gt;</p>
-	</canvas>
-</div>
-
 <noscript>
 	<p class="alert alert-error">JavaScript isn't enabled :(</p>
 </noscript>
@@ -151,7 +155,7 @@
 <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.3.min.js"><\/script>')</script>
 <script src="js/vendor/bootstrap-2.2.2.min.js"></script>
 
-<!-- cd js; coffee -c -j compiled.js *.coffee -->
+<!-- cd js; coffee -c -b -j compiled.js icemaze.coffee game.coffee decoder.coffee examples.coffee theme.coffee theme-basic.coffee theme-pkmngs.coffee layout.coffee main.coffee -->
 <script src="js/compiled.js"></script>
 
 </body>
