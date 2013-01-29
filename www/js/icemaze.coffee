@@ -1,14 +1,17 @@
-# IceMaze (c) 2012 by Matt Cudmore
+# IceMaze (c) 2012-2013 by Matt Cudmore
 
 class Maze
 	constructor: (@width, @height) ->
 		@cells = [[]]
-		@entry = [-1, 0]
-		@exit  = [@width, @height - 1] 
+		# default entry in top-left corner
+		@entry = [0, 0]
+		# default exit in bottom-right corner
+		@exit  = [@width - 1, @height - 1]
 
 	get: (at) =>
 		[x, y] = at
 		tile = (@cells[x] or [])[y] or {}
+		# TODO edge: attr if border
 		return $.extend tile,
 			border: x < 0 or x >= @width or y < 0 or y >= @height
 			entry:  x is @entry[0] and y is @entry[1]
@@ -77,7 +80,7 @@ class Maze
 		# non-blocked mutable non-border tiles are passable
 		return not (tile.blocked or tile.border)
 
-	move: (from, dir) =>
+	move: (from, dir) ->
 		switch dir
 			when "left"  then [from[0] - 1, from[1]]
 			when "up"    then [from[0], from[1] - 1]
@@ -88,9 +91,19 @@ class Maze
 	getPath: (from, dir) =>
 		path = [from]
 		while true
-			from = move from, dir
-			break if not @isPassable from
-			path.push from
+			next = move from, dir
+			break if not @isPassable next
+			path.push next
 			# take only one step onto ground
-			break if @is from, ground: true
+			break if @is next, ground: true
+			from = next
 		return path
+
+	getRelativeDirection: (a, b) ->
+		# a relative to b
+		d = []
+		d.push "left"  if a[0] < b[0]
+		d.push "right" if a[0] > b[0]
+		d.push "up"    if a[1] < b[1]
+		d.push "down"  if a[1] > b[1]
+		return d

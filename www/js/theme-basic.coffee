@@ -1,46 +1,10 @@
-# theme to simply draw the maze with no external image dependencies
+# theme to simply draw the maze with no image dependencies
 
-class ThemeBasic
-	constructor: (config) ->
-		@prep(config)
-
-	anim: {}
+class ThemeBasic extends Theme
 	dims:
 		tile:   40 # px for tile width and height
 		pad:     2 # px internal tile padding
 		margin: 10 # px margin around maze
-
-	init: () =>
-		# nothing to initialize
-
-	prep: ({c2d, cSize, maze}) =>
-		# update theme configuration
-		@c2d = c2d if c2d?
-		@dims.canvas = cSize if cSize?
-		# update source content
-		@maze = maze if maze?
-
-	fini: () =>
-		# finished with theme
-		@stop()
-		delete @c2d
-		delete @maze
-
-	start: (mode) =>
-		# reset mode
-		@stop()
-		@mode = mode if mode?
-		# begin any ambient animations
-		# (none for basic theme)
-
-	stop: () =>
-		# stop any animations
-		if @anim.move?
-			clearTimeout(@anim.move)
-			delete @anim.move
-		if @anim.matte?
-			clearTimeout(@anim.matte)
-			delete @anim.matte
 
 	size: (borders, margins) =>
 		# returns the minimum canvas size required for drawing.
@@ -63,7 +27,7 @@ class ThemeBasic
 		xoff = Math.floor((@dims.canvas[0] - mazePlaneSize[0]) / 2)
 		yoff = Math.floor((@dims.canvas[1] - mazePlaneSize[1]) / 2)
 		return [xoff + @dims.margin, yoff + @dims.margin]
-		
+
 	at: (drawX, drawY) =>
 		# calculate which tile was clicked given click coordinates
 		# relative to the full canvas.
