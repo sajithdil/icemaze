@@ -1,4 +1,4 @@
-# IceMaze (c) 2013 by Matt Cudmore
+# IceMaze (c) 2012-2013 by Matt Cudmore
 
 class Theme
 

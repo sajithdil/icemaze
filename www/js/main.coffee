@@ -1,4 +1,5 @@
-# compile with: coffee -c [-o compiled] -j *.coffee
+# IceMaze (c) 2012-2013 by Matt Cudmore
+# compile with: coffee -c -j compiled.js *.coffee
 
 maze  = null
 mode  = null
@@ -46,6 +47,9 @@ window.alert = (message)->
 	# raise message
 
 $ ->
+	# JavaScript enabled; show the menu
+	$("#menu").show()
+
 	# TODO check whether canvas and 2d drawing context is supported
 	# TODO initialize themes
 	# TODO load themes list into menu

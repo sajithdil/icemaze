@@ -1,4 +1,5 @@
-# theme to simply draw the maze with no image dependencies
+# IceMaze (c) 2012-2013 by Matt Cudmore
+# ThemeBasic to simply draw the maze with no image dependencies
 
 class ThemeBasic extends Theme
 	dims:

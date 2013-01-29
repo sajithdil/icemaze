@@ -1,3 +1,4 @@
+# IceMaze (c) 2012-2013 by Matt Cudmore
 
 refit = () ->
 	# get jQuery elements

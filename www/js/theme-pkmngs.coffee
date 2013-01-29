@@ -1,4 +1,5 @@
-# theme to draw the maze using the original Pokémon Gold/Silver tileset
+# IceMaze (c) 2012-2013 by Matt Cudmore
+# ThemePkmnGS to draw the maze using the original Pokémon Gold/Silver tileset
 
 class ThemePkmnGS extends Theme
 
