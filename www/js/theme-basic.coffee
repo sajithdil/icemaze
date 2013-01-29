@@ -38,5 +38,14 @@ class ThemeBasic extends Theme
 		tileY = Math.floor((drawY - offs[1]) / @dims.tile)
 		return [tileX, tileY]
 
-	drawMaze: (maze) ->
+	drawMaze: (maze) =>
 		@maze = maze if maze?
+		return unless @maze? and c2d?
+
+	drawPlayerAt: (at) =>
+		return unless @maze? and @c2d?
+		# TODO
+
+	drawPlayerMove: () =>
+		return unless @maze? and @c2d?
+		# TODO

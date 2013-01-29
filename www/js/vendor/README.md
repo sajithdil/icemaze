@@ -18,3 +18,8 @@ Includes
 
 * `coffeescript-1.4.0.js`
   (compiler used in development)
+
+### [requestAnimationFrame polyfill](https://gist.github.com/1579671)
+
+* `rAF.js`
+  (thanks to paulirish and friends)

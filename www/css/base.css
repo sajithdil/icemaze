@@ -10,7 +10,9 @@
 	padding: 0 1em;
 	display: none; /* in case of noscript */
 
-	border-bottom: thin solid red;
+	background-color: gray;
+	background-image: url(../img/subtle_carbon.png);
+	border-bottom: medium double white;
 }
 
 #info {

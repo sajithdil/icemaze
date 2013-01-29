@@ -1,7 +1,7 @@
 # IceMaze (c) 2012-2013 by Matt Cudmore
 
 refit = () ->
-	return if not theme
+	return unless theme
 
 	# get jQuery elements
 	$win = $(window)
@@ -36,6 +36,7 @@ refit = () ->
 	# add scrollbars to $wrap if needed
 	$wrap.css("overflow-x", if overW then "scroll" else "hidden")
 	$wrap.css("overflow-y", if overH then "scroll" else "hidden")
+	return
 
 setUIMode = (toMode) ->
 	switch toMode
@@ -49,6 +50,7 @@ setUIMode = (toMode) ->
 			$("#playMenu").show()
 			$("#editMode").removeClass("active")
 			$("#editMenu").hide()
+	return
 
 loadThemesMenu = () ->
 	$menu = $("ul", "#themes").empty()
@@ -81,6 +83,7 @@ loadExamplesMenu = () ->
 		$("<li><a tabindex='-1' href='#'>None</a></li>")
 		.addClass("disabled")
 		.appendTo($menu)
+	return
 
 loadStorageMenus = () ->
 	$loadMenu = $("ul", "#loadSaved").empty()
@@ -100,6 +103,7 @@ loadStorageMenus = () ->
 		.appendTo($loadMenu)
 		.clone()
 		.appendTo($saveMenu)
+	return
 
 window.alert = (message, timeout = 2000) ->
 	# raise message

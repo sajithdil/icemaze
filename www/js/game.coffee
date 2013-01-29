@@ -2,34 +2,48 @@
 
 # globals
 maze = null
-mode = "edit"
+mode = null
 
 playerPosition = null
 
 loadMaze = (m) ->
 	maze = m
-	reprep()
+	reset()
+	return
 
 setMode = (toMode) ->
 	return if mode is toMode #already
+	mode = toMode
 	setUIMode toMode
-	switch toMode
+	reset()
+	alert "Mode: #{toMode}"
+	return
+
+reset = () ->
+	return unless maze? and theme?
+	switch mode
 		when "edit" then reprep()
 		when "play" then replay()
-	alert "Mode: #{toMode}"
+	return
+
+# thanks to polyfill https://gist.github.com/1579671
+retRAF = (el) -> (fn) -> window.requestAnimationFrame(fn, el)
+retCAF = () -> (id) -> window.cancelAnimationFrame(id)
 
 reprep = () ->
-	return if (not maze) or (not theme)
+	$maze0 = $("#maze").get(0)
 	theme.prep
-		c2d: $("#maze").get(0).getContext("2d")
+		c2d: $maze0.getContext("2d"),
+		raf: retRAF($maze0), caf: retCAF(),
 		maze: maze, mode: mode
 	theme.drawMaze()
+	return
 
 replay = () ->
-	return if (not maze) or (not theme)
 	reprep()
 	playerPosition = maze.entry
 	theme.drawPlayerAt playerPosition
+	return
 
 click = (ev) ->
 	ev.preventDefault()
@@ -44,6 +58,7 @@ click = (ev) ->
 	# pass only what is needed
 	maze.click theme.at(relX, relY), metaCount
 	theme.drawMaze()
+	return
 
 arrow = (ev) ->
 	ev.preventDefault()
@@ -66,5 +81,5 @@ arrow = (ev) ->
 		playerPosition = endpoint
 		alert "WIN!" if winner
 	# log the move
-	alert "moving to #{endpoint}"
+	alert "Move to #{endpoint}"
 	return

@@ -5,30 +5,28 @@ themes = {}
 theme = null
 activeThemeName = null
 
-regTheme = (name, t, useAsDefault) ->
+regTheme = (name, t) ->
 	themes[name] = t
-	loadTheme name if useAsDefault
 	return
 
 loadTheme = (name) ->
-	if not themes[name]
+	unless themes[name]?
 		alert "Theme #{name} is undefined"
 		return
-
 	# unload previous theme
 	theme.fini() if theme?
 	# load new theme
 	activeThemeName = name
-	alert "Theme: #{name}"
 	theme = themes[name]
-	reprep()
+	reset()
 	refit()
+	alert "Theme: #{name}"
 	return
 
 class Theme
 
-	# each theme may define these maps;
-	# images will be pre-loaded by the constructor
+	# each theme may define these maps:
+	# (images will be pre-loaded by the constructor)
 	images:  {} # imgID: "filename"
 	sprites: {} # spriteID: [imgID, x, y, wid, hei]
 	tiles:   {} # tileID: [animation mode, array of spriteID values]
@@ -36,17 +34,20 @@ class Theme
 	anim: {}
 	dims: {}
 
-	constructor: (@name, useAsDefault) ->
+	constructor: () ->
 		# preload images
 		for imgID, imgFile of @images
 			@images[imgID] = img = new Image()
 			img.src = imgFile
 		return
 
-	prep: ({c2d, maze, mode}) =>
+	prep: ({c2d, maze, mode, raf, caf}) =>
 		# update theme configuration
 		@stop()
-		@c2d = c2d if c2d?
+		# TODO consider using $.extend(this, atts)
+		@c2d = c2d if c2d? # context2D for drawing
+		@raf = raf if raf? # requestAnimationFrame
+		@caf = caf if caf? # cancelAnimationFrame
 		@maze = maze if maze?
 		@mode = mode if mode?
 		running = true
@@ -76,3 +77,19 @@ class Theme
 		max = (a, b) -> if a > b then a else b
 		# return actual
 		@dims.canvas = [max(w1, w2), max(h1, h2)]
+
+	# each theme must implement these methods:
+
+	#size: () =>
+		# return the minimum size [w,h] needed to draw the maze
+
+	#drawMaze: (@maze) =>
+		# redraw matte, border, and maze
+
+	#drawPlayerAt: ([x,y], direction) =>
+		# draw an avatar at the position [x,y] facing the direction
+
+	#drawPlayerMove: (direction, path, callback) =>
+		# draw an avatar moving in the direction along the path
+		# use @raf(animFunction) to request an animation frame
+		# call callback when animation completes

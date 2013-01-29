@@ -4,9 +4,9 @@ examples =
 	"id": ""
 
 loadExample = (id) ->
-	if not examples[id]
+	unless examples[id]?
 		alert "Example #{id} is undefined"
 		return
-
-	alert "Example: #{id}"
 	loadDecode examples[id]
+	alert "Example: #{id}"
+	return

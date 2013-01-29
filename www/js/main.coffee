@@ -1,5 +1,4 @@
 # IceMaze (c) 2012-2013 by Matt Cudmore
-# compile with: coffee -c -b -j compiled.js icemaze.coffee game.coffee decoder.coffee examples.coffee theme.coffee theme-basic.coffee theme-pkmngs.coffee layout.coffee main.coffee
 
 getURLParams = () ->
 	# thanks http://stackoverflow.com/a/2880929/1597274
@@ -16,22 +15,28 @@ $ ->
 	# JavaScript enabled; show the menu
 	$("#menu").show()
 
-	regTheme "Basic", new ThemeBasic, true
-	regTheme "Pokémon GS", new ThemePkmnGS
+	regTheme "Basic",     new ThemeBasic
+	regTheme "PokémonGS", new ThemePkmnGS
 
 	args = getURLParams()
-	if args.maze? then loadDecode args.maze
-	else if args.eg? then loadExample args.eg
-	else loadMaze new Maze(10, 10)
-	if args.mode? then setMode args.mode
-	if args.theme? then loadTheme args.theme
 
+	if args.maze?    then loadDecode args.maze
+	else if args.eg? then loadExample args.eg
+	else                  loadMaze new Maze(10, 10)
+
+	if args.mode?    then setMode args.mode
+	else                  setMode "edit" # default
+
+	if args.theme?   then loadTheme args.theme
+	else                  loadTheme "Basic" # default
+
+	# load dynamic menus
 	loadThemesMenu()
-	#loadExamplesMenu()
+	loadExamplesMenu()
 	#loadStorage()
 	#loadStorageMenus()
 
-	# add menu handlers
+	# add static menu handlers
 	$("#editMode").on "click", -> setMode "edit"
 	$("#playMode").on "click", -> setMode "play"
 	$("#restart").on "click", replay
