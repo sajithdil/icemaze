@@ -76,10 +76,10 @@ arrow = (ev) ->
 	endpoint = path[path.length - 1]
 	# is the endpoint a win?
 	winner = maze.is endpoint, exit: true
+	# log the move
+	alert "Move #{direction} from #{playerPosition} to #{endpoint}"
 	# tell the theme to draw the movement
 	theme.drawPlayerMove direction, path, () ->
 		playerPosition = endpoint
 		alert "WIN!" if winner
-	# log the move
-	alert "Move to #{endpoint}"
 	return

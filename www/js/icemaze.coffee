@@ -73,8 +73,8 @@ class Maze
 		return false if not tile.inside
 		# entry and exit are always passable
 		return true if tile.entry or tile.exit
-		# non-blocked mutable non-border tiles are passable
-		return not (tile.blocked or tile.border)
+		# non-blocked tiles are passable
+		return not tile.blocked
 
 	move: (from, dir) ->
 		switch dir
@@ -87,7 +87,7 @@ class Maze
 	getPath: (from, dir) =>
 		path = [from]
 		while true
-			next = move from, dir
+			next = @move from, dir
 			break if not @isPassable next
 			path.push next
 			# take only one step onto ground

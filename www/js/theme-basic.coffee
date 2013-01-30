@@ -121,6 +121,8 @@ class ThemeBasic extends Theme
 		return unless @maze? and @c2d?
 		# TODO
 
-	drawPlayerMove: () =>
+	drawPlayerMove: (dir, path, callback) =>
 		return unless @maze? and @c2d?
 		# TODO
+		callback() if callback?
+
