@@ -75,10 +75,12 @@ class Theme
 		[w1, h1] = min
 		[w2, h2] = @size()
 		max = (a, b) -> if a > b then a else b
-		# return actual
 		@dims.canvas = [max(w1, w2), max(h1, h2)]
 
 	# each theme must implement these methods:
+
+	#offsets: =>
+		# return the [left,top] padding of the maze on the canvas
 
 	#size: () =>
 		# return the minimum size [w,h] needed to draw the maze

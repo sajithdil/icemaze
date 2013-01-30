@@ -36,6 +36,10 @@ refit = () ->
 	# add scrollbars to $wrap if needed
 	$wrap.css("overflow-x", if overW then "scroll" else "hidden")
 	$wrap.css("overflow-y", if overH then "scroll" else "hidden")
+
+	# temporary: need to enable refresh view even in mid-play,
+	# or enable the theme to refresh with anim frames
+	theme.drawMaze()
 	return
 
 setUIMode = (toMode) ->
