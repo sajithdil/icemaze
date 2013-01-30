@@ -1,6 +1,7 @@
 # IceMaze (c) 2012-2013 by Matt Cudmore
 
 class Maze
+
 	constructor: (@width, @height) ->
 		@cells = [[]]
 		# default entry in top-left corner
@@ -11,9 +12,14 @@ class Maze
 	get: (at) =>
 		[x, y] = at
 		tile = (@cells[x] or [])[y] or {}
-		# TODO edge: attr if border
+		# check for edges
+		[L, R, T, B] = [x is 0, x is @width - 1, y is 0, y is @height - 1]
+		# define positional attributes on tile
 		return $.extend tile,
-			border: x < 0 or x >= @width or y < 0 or y >= @height
+			inside: 0 <= x < @width and 0 <= y < @height
+			border: L or R or T or B
+			corner: (L or R) and (T or B)
+			edges:  {left: L, right: R, top: T, bottom: B}
 			entry:  x is @entry[0] and y is @entry[1]
 			exit:   x is @exit[0] and y is @exit[1]
 
@@ -23,20 +29,8 @@ class Maze
 			return false if tile[a] isnt attrs[a]
 		return true
 
-	isMutable: (at, orEntryExit) =>
-		# returns whether the maze is mutable at the given position.
-		[x, y] = at
-		# all tiles within the maze are mutable.
-		within = x >= 0 and x < @width and y >= 0 and y < @height
-		return within if within or not orEntryExit
-		# non-corner border positions may be considered mutable,
-		# for the entry or exit may be on the outer edge of the maze.
-		bWE = x is -1 or x is @width # west or east border
-		bNS = y is -1 or y is @height # north or south border
-		return (bWE and not bNS) or (bNS and not bWE)
-
 	set: (at, attrs) =>
-		return if not @isMutable at
+		return unless @is at, inside: true
 		[x, y] = at
 		# create the column in @cells if not yet defined
 		tile = (@cells[x] ?= [])[y] or {}
@@ -44,37 +38,39 @@ class Maze
 		@cells[x][y] = tile
 
 	toggle: (at, attr) =>
-		return if not @isMutable at
+		return unless @is at, inside: true
 		tog = {}
 		ret = tog[attr] = not @get(at)[attr]
 		@set at, tog
 		return ret
 
 	setEntry: (at) =>
-		return if not @isMutable at, true
-		@entry = at if not @is at, exit: true
+		@entry = at if @is at, inside: true, exit: false
 
 	setExit: (at) =>
-		return if not @isMutable at, true
-		@exit = at if not @is at, entry: true
+		@exit = at if @is at, inside: true, entry: false
 
 	click: (at, metac) =>
-		return if not @isMutable at
+		return unless @is at, inside: true
 		switch metac
 			when 1
 				@toggle at, "ground"
-				showStatus "toggle ground at #{at}"
+				alert "Toggle ground at #{at}"
 			when 2
 				locked = @toggle at, "locked"
-				un = if locked then "" else "un"
-				showStatus "#{un}lock tile at #{at}"
+				unl = if locked then "L" else "Unl"
+				alert "#{unl}ock tile at #{at}"
+			when 3
+				special = (@get(at).special || 0) + 1
+				@set at, special: special
+				alert "Change special sprite index to #{special} at #{at}"
 			else
 				@toggle at, "blocked"
-				showStatus "toggle block at #{at}"
+				alert "Toggle block at #{at}"
 
 	isPassable: (at) =>
-		return false if not @isMutable at, true
 		tile = @get at
+		return false if not tile.inside
 		# entry and exit are always passable
 		return true if tile.entry or tile.exit
 		# non-blocked mutable non-border tiles are passable
@@ -101,9 +97,7 @@ class Maze
 
 	getRelativeDirection: (a, b) ->
 		# a relative to b
-		d = []
-		d.push "left"  if a[0] < b[0]
-		d.push "right" if a[0] > b[0]
-		d.push "up"    if a[1] < b[1]
-		d.push "down"  if a[1] > b[1]
-		return d
+		left:  a[0] < b[0]
+		right: a[0] > b[0]
+		up:    a[1] < b[1]
+		down:  a[1] > b[1]
