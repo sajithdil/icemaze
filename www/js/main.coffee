@@ -36,7 +36,7 @@ setMode = (mode) ->
 	alert "Begin #{mode} mode"
 	setUIMode mode
 	game.set mode: mode
-	theme.set mode: mode
+	theme?.set mode: mode
 
 getURLParams = ->
 	# thanks http://stackoverflow.com/a/2880929/1597274
@@ -78,7 +78,7 @@ $ ->
 	# add static menu handlers
 	$("#editMode").on "click", ()-> setMode "edit"
 	$("#playMode").on "click", ()-> setMode "play"
-	$("#playRestart").on "click", ()-> game.replay()
+	$("#playRestart").on "click", ()-> game.reset()
 
 	# add maze handlers
 	$("#maze").on "click", (ev)-> game.click ev, $("#maze")

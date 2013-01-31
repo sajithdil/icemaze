@@ -13,6 +13,7 @@ class Theme
 
 	# each theme should record active animations in @anims
 	anims: {}
+	animsCount: 0
 
 	constructor: ->
 		# preload images
@@ -32,22 +33,37 @@ class Theme
 		@maze = attrs.maze if attrs.maze?
 		@mode = attrs.mode if attrs.mode?
 
-	anim: (animID, fn) =>
+	anim: (animID, cb, fn) =>
+		# fn should return true for another frame
+		# cb will be called when done
 		@stop animID
-		@anims[animID] = @raf fn
+		cb ?= -> # empty callback
+		begun = null
+		next = =>
+			@anims[animID] = @raf (time) =>
+				begun ?= time
+				# pass fn a duration since anim begin
+				if fn(time - begun) then next()
+				else @stop animID; cb()
+		@animsCount++
+		next()
 
 	busy: =>
-		@anims.length > 0
+		@animsCount > 0
 
 	stop: (animIDs...) =>
 		if animIDs.length > 0
 			for animID in animIDs
+				continue if not @anims[animID]
 				@caf @anims[animID]
 				delete @anims[animID]
+				@animsCount--
 		else # stop all animations
 			for animID of @anims
+				continue if not @anims[animID]
 				@caf @anims[animID]
 				delete @anims[animID]
+				@animsCount--
 		return
 
 	resize: (min) =>

@@ -22,6 +22,12 @@ class ThemeBasic extends Theme
 	entryColour:    "green"
 	exitColour:     "orange"
 
+	avatarSize:     .5
+	avatarFill:     "black"
+	avatarStroke:   "red"
+	avatarLineSize: 1
+	animOneStepMS:  100
+
 	size: =>
 		# returns the minimum canvas size required for drawing.
 		m = @marginSize * 2
@@ -55,6 +61,9 @@ class ThemeBasic extends Theme
 			[w, h] = [@maze.width - 1, @maze.height - 1]
 			@drawTile [x, y] for x in [0..w] for y in [0..h]
 		@c2d.restore()
+
+	##################################################
+	# tile drawing:
 
 	drawMatte: =>
 		wh = @size()
@@ -90,9 +99,6 @@ class ThemeBasic extends Theme
 
 		@c2d.restore()
 
-	##################################################
-	# drawing utility methods:
-
 	traceSquareTile: (psize) =>
 		wh = @tileSize * psize
 		xy = (@tileSize - wh) / 2
@@ -109,7 +115,42 @@ class ThemeBasic extends Theme
 		xy = @tileSize / 2
 		@traceCircle xy, xy, wh / 2
 
+	##################################################
+	# player drawing:
+
 	movePlayer: (position, direction, path, callback) =>
-		o = @offsets()
-		t = @tileSize
-		callback() if callback
+		offs = @offsets()
+		pixy = [position[0] * @tileSize, position[1] * @tileSize]
+		path ?= [position]
+
+		endStep = path.length - 1
+		endTime = endStep * @animOneStepMS
+		endDist = endStep * @tileSize
+
+		@anim "playerMove", callback, (nowTime) =>
+			if nowTime > endTime then nowTime = endTime
+			nowFrac = (nowTime / endTime) or 0
+			nowStep = Math.floor (nowFrac * endStep)
+			nowDist = nowFrac * endDist
+
+			# redraw adjacent tiles
+			atStep = @maze.getNextPosition position, direction, nowStep
+			atNext = @maze.getNextPosition position, direction, nowStep + 1
+			@redraw atStep, atNext
+
+			# draw avatar
+			@c2d.save()
+			@c2d.translate offs[0], offs[1]
+			@c2d.translate pixy[0], pixy[1]
+			switch direction
+				when "left" then  @c2d.translate -nowDist, 0
+				when "right" then @c2d.translate nowDist, 0
+				when "up" then    @c2d.translate 0, -nowDist
+				when "down" then  @c2d.translate 0, nowDist
+			@traceCircleTile @avatarSize
+			@fill @avatarFill
+			@stroke @avatarLineSize, @avatarStroke
+			@c2d.restore()
+
+			# finished animation?
+			return nowTime < endTime

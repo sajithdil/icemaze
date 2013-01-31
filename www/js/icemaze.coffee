@@ -88,12 +88,12 @@ class Maze
 			from = next
 		return path
 
-	getNextPosition: (from, dir) ->
+	getNextPosition: (from, dir, dist = 1) ->
 		switch dir
-			when "left"  then [from[0] - 1, from[1]]
-			when "up"    then [from[0], from[1] - 1]
-			when "right" then [from[0] + 1, from[1]]
-			when "down"  then [from[0], from[1] + 1]
+			when "left"  then [from[0] - dist, from[1]]
+			when "up"    then [from[0], from[1] - dist]
+			when "right" then [from[0] + dist, from[1]]
+			when "down"  then [from[0], from[1] + dist]
 			else throw "Unrecognized direction #{dir}"
 
 	getRelativeDirection: (a, b) ->

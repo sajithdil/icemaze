@@ -9,12 +9,16 @@ class Game
 	set: (attrs) =>
 		@maze = attrs.maze if attrs.maze?
 		@mode = attrs.mode if attrs.mode?
-		@replay() if attrs.mode is "play"
+		return unless theme?
+		theme.stop()
+		theme.redraw()
+		if attrs.mode is "play"
+			@playerPosition = @maze.entry
+			alert "Begin game at #{@playerPosition}"
+			theme.movePlayer @playerPosition, "down"
 
-	replay: =>
-		@playerPosition = @maze.entry
-		alert "Begin game at #{@playerPosition}"
-		theme.movePlayer @playerPosition, "down"
+	reset: =>
+		@set mode: @mode
 
 	click: (ev, $canvas) =>
 		ev.preventDefault()
