@@ -8,8 +8,8 @@ class Theme
 	sprites: {} # spriteID: [imgID, x, y, w, h]
 	tiles:   {} # tileID: [animation mode, array of spriteID values]
 
-	# each theme may access @dims.canvas
-	dims: canvas: [0, 0]
+	# each theme may access @canvasSize
+	canvasSize: [0, 0]
 
 	# each theme should record active animations in @anims
 	anims: {}
@@ -70,7 +70,7 @@ class Theme
 		[w1, h1] = min
 		[w2, h2] = @size()
 		max = (a, b) -> if a > b then a else b
-		@dims.canvas = [max(w1, w2), max(h1, h2)]
+		@canvasSize = [max(w1, w2), max(h1, h2)]
 
 	##################################################
 	# each theme must implement these methods:

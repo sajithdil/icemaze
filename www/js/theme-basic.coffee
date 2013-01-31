@@ -11,7 +11,7 @@ class ThemeBasic extends Theme
 	gridLineColour: "lightgray"
 	gridLineSize:   1
 
-	groundTileSize: .9
+	floorTileSize:  .9
 	iceColour:      "lightblue"
 	dirtColour:     "tan"
 	rockTileSize:   .75
@@ -40,15 +40,15 @@ class ThemeBasic extends Theme
 	offsets: =>
 		# returns drawing offsets [x, y] for centring the maze on the canvas.
 		mazeSize = @size()
-		xoff = Math.floor((@dims.canvas[0] - mazeSize[0]) / 2)
-		yoff = Math.floor((@dims.canvas[1] - mazeSize[1]) / 2)
+		xoff = Math.floor((@canvasSize[0] - mazeSize[0]) / 2)
+		yoff = Math.floor((@canvasSize[1] - mazeSize[1]) / 2)
 		return [xoff + @marginSize, yoff + @marginSize]
 
-	at: (x, y) =>
-		# returns the tile position given the pixel coordinates.
+	at: (canvasX, canvasY) =>
+		# returns the tile position at the canvas coordinates.
 		offs = @offsets() # tile (0,0) offsets on full canvas
-		tileX = Math.floor((x - offs[0]) / @tileSize)
-		tileY = Math.floor((y - offs[1]) / @tileSize)
+		tileX = Math.floor((canvasX - offs[0]) / @tileSize)
+		tileY = Math.floor((canvasY - offs[1]) / @tileSize)
 		return [tileX, tileY]
 
 	redraw: (positions...) => if @maze?
@@ -83,8 +83,8 @@ class ThemeBasic extends Theme
 		# draw grid
 		@stroke @gridLineSize, @gridLineColour
 
-		# ground -- square
-		@traceSquareTile @groundTileSize
+		# floor -- square
+		@traceSquareTile @floorTileSize
 		@fill if tile.ground then @dirtColour else @iceColour
 
 		# objects -- rounded square
@@ -118,10 +118,10 @@ class ThemeBasic extends Theme
 	##################################################
 	# player drawing:
 
-	movePlayer: (position, direction, path, callback) =>
+	movePlayer: (from, dir, path, callback) =>
 		offs = @offsets()
-		pixy = [position[0] * @tileSize, position[1] * @tileSize]
-		path ?= [position]
+		pixy = [from[0] * @tileSize, from[1] * @tileSize]
+		path ?= [from]
 
 		endStep = path.length - 1
 		endTime = endStep * @animOneStepMS
@@ -134,15 +134,15 @@ class ThemeBasic extends Theme
 			nowDist = nowFrac * endDist
 
 			# redraw adjacent tiles
-			atStep = @maze.getNextPosition position, direction, nowStep
-			atNext = @maze.getNextPosition position, direction, nowStep + 1
-			@redraw atStep, atNext
+			posCurr = @maze.getNextPosition from, dir, nowStep
+			posNext = @maze.getNextPosition from, dir, nowStep + 1
+			@redraw posCurr, posNext
 
 			# draw avatar
 			@c2d.save()
 			@c2d.translate offs[0], offs[1]
 			@c2d.translate pixy[0], pixy[1]
-			switch direction
+			switch dir
 				when "left" then  @c2d.translate -nowDist, 0
 				when "right" then @c2d.translate nowDist, 0
 				when "up" then    @c2d.translate 0, -nowDist
