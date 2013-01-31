@@ -3,126 +3,113 @@
 
 class ThemeBasic extends Theme
 
-	dims:
-		tile:   40 # px for tile width and height
-		padd:    5 # px internal tile padding
-		margin: 20 # px margin around maze
+	tileSize:       40 # px for tile width and height
+	marginSize:     20 # px margin around maze
 
-	size: () =>
+	bgColour:       "white"
+	bgLockColour:   "yellow"
+	gridLineColour: "lightgray"
+	gridLineSize:   1
+
+	groundTileSize: .9
+	iceColour:      "lightblue"
+	dirtColour:     "tan"
+	rockTileSize:   .75
+	rockRadiusSize: .1
+	rockColour:     "gray"
+
+	eeCircleSize:   .6
+	entryColour:    "green"
+	exitColour:     "orange"
+
+	size: =>
 		# returns the minimum canvas size required for drawing.
-		# include borders and margins in calculation by default,
-		# for both borders and margins are included in drawing.
-		m = @dims.margin * 2
+		m = @marginSize * 2
 		mazeW = @maze?.width or 0
 		mazeH = @maze?.height or 0
-		drawW = mazeW * @dims.tile
-		drawH = mazeH * @dims.tile
+		drawW = mazeW * @tileSize
+		drawH = mazeH * @tileSize
 		return [drawW + m, drawH + m]
 
-	offsets: () =>
-		# returns drawing offsets to the top-left (0,0) tile
-		# of the maze, to centre the maze on the full canvas.
-		# top-left corner border of maze is drawn at (-1,-1),
-		# so ignore borders but include margins in mazePlaneSize.
-		mazePlaneSize = @size()
-		xoff = Math.floor((@dims.canvas[0] - mazePlaneSize[0]) / 2)
-		yoff = Math.floor((@dims.canvas[1] - mazePlaneSize[1]) / 2)
-		return [xoff + @dims.margin, yoff + @dims.margin]
+	offsets: =>
+		# returns drawing offsets [x, y] for centring the maze on the canvas.
+		mazeSize = @size()
+		xoff = Math.floor((@dims.canvas[0] - mazeSize[0]) / 2)
+		yoff = Math.floor((@dims.canvas[1] - mazeSize[1]) / 2)
+		return [xoff + @marginSize, yoff + @marginSize]
 
-	at: (drawX, drawY) =>
-		# calculate which tile was clicked given click coordinates
-		# relative to the full canvas.
+	at: (x, y) =>
+		# returns the tile position given the pixel coordinates.
 		offs = @offsets() # tile (0,0) offsets on full canvas
-		tileX = Math.floor((drawX - offs[0]) / @dims.tile)
-		tileY = Math.floor((drawY - offs[1]) / @dims.tile)
+		tileX = Math.floor((x - offs[0]) / @tileSize)
+		tileY = Math.floor((y - offs[1]) / @tileSize)
 		return [tileX, tileY]
 
-	drawMaze: (maze) =>
-		@maze = maze if maze?
-		return unless @maze? and @c2d? and @dims.canvas?
-		@c2d.clearRect 0, 0, @dims.canvas[0], @dims.canvas[1]
-		@offs = @offsets()
-		for x in [0 .. @maze.width - 1]
-			for y in [0 .. @maze.height - 1]
-				@drawTile([x, y])
-		return
+	redraw: (positions...) => if @maze?
+		@c2d.save()
+		@c2d.translate @offsets()...
+		if positions.length > 0
+			@drawTile at for at in positions
+		else # redraw matte and maze
+			@drawMatte()
+			[w, h] = [@maze.width - 1, @maze.height - 1]
+			@drawTile [x, y] for x in [0..w] for y in [0..h]
+		@c2d.restore()
+
+	drawMatte: =>
+		wh = @size()
+		@traceSquare -@marginSize, -@marginSize, wh[0], wh[1]
+		@fill "black"
 
 	drawTile: (at) =>
 		tile = @maze.get at
-		t = @dims.tile
-		p0 = @dims.padd
-		p1 = t - (p0 * 2)
+		return if not tile.inside
 
 		@c2d.save()
-		@c2d.translate @offs[0] + (at[0] * t), @offs[1] + (at[1] * t)
+		@c2d.translate at[0] * @tileSize, at[1] * @tileSize
 
-		# background
-		if tile.locked
-			@c2d.fillStyle = "yellow"
-			@c2d.fillRect 0, 0, t, t
-
+		# clear
+		@traceSquareTile 1
+		@fill if tile.locked then @bgLockColour else @bgColour
 		# draw grid
-		@c2d.strokeStyle = "lightgray"
-		@c2d.lineWidth = 1
-		@c2d.strokeRect 0, 0, t, t
+		@stroke @gridLineSize, @gridLineColour
 
 		# ground -- square
-		@c2d.fillStyle = if tile.ground then "tan" else "lightblue"
-		@c2d.fillRect p0, p0, p1, p1
+		@traceSquareTile @groundTileSize
+		@fill if tile.ground then @dirtColour else @iceColour
 
 		# objects -- rounded square
 		if tile.blocked
-			@c2d.fillStyle = "gray"
-			@drawRRect @c2d, p0, p0, p1, p1, p1/3
+			@traceRoundedTile @rockTileSize, @rockRadiusSize
+			@fill @rockColour
 
 		# entry/exit -- circle
 		if tile.entry or tile.exit
-			@c2d.fillStyle = if tile.entry then "green" else "orange"
-			@c2d.beginPath()
-			@c2d.arc t/2, t/2, p1/2, 0, Math.PI * 2, false
-			@c2d.fill()
-			@c2d.closePath()
-
-		# walls
-		if tile.border
-			@c2d.strokeStyle = "darkgray"
-			@c2d.beginPath()
-			@c2d.lineWidth = 3
-			@c2d.lineCap = "round"
-			if tile.edges.left
-				@c2d.moveTo 0, 0; @c2d.lineTo 0, t
-			if tile.edges.right
-				@c2d.moveTo t, 0; @c2d.lineTo t, t
-			if tile.edges.top
-				@c2d.moveTo 0, 0; @c2d.lineTo t, 0
-			if tile.edges.bottom
-				@c2d.moveTo 0, t; @c2d.lineTo t, t
-			@c2d.stroke()
-			@c2d.closePath()
+			@traceCircleTile @eeCircleSize
+			@fill if tile.entry then @entryColour else @exitColour
 
 		@c2d.restore()
 
-	drawRRect: (ctx, x, y, w, h, radius) ->
-		# thanks http://stackoverflow.com/a/3368118
-		ctx.beginPath()
-		ctx.moveTo(x + radius, y)
-		ctx.lineTo(x + w - radius, y)
-		ctx.quadraticCurveTo(x + w, y, x + w, y + radius)
-		ctx.lineTo(x + w, y + h - radius)
-		ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h)
-		ctx.lineTo(x + radius, y + h)
-		ctx.quadraticCurveTo(x, y + h, x, y + h - radius)
-		ctx.lineTo(x, y + radius)
-		ctx.quadraticCurveTo(x, y, x + radius, y)
-		ctx.closePath()
-		ctx.fill()
+	##################################################
+	# drawing utility methods:
 
-	drawPlayerAt: (at) =>
-		return unless @maze? and @c2d?
-		# TODO
+	traceSquareTile: (psize) =>
+		wh = @tileSize * psize
+		xy = (@tileSize - wh) / 2
+		@traceSquare xy, xy, wh, wh
 
-	drawPlayerMove: (dir, path, callback) =>
-		return unless @maze? and @c2d?
-		# TODO
-		callback() if callback?
+	traceRoundedTile: (psize, prad) =>
+		wh = @tileSize * psize
+		xy = (@tileSize - wh) / 2
+		radius = wh * prad
+		@traceRounded xy, xy, wh, wh, radius
 
+	traceCircleTile: (psize) =>
+		wh = @tileSize * psize
+		xy = @tileSize / 2
+		@traceCircle xy, xy, wh / 2
+
+	movePlayer: (position, direction, path, callback) =>
+		o = @offsets()
+		t = @tileSize
+		callback() if callback

@@ -1,8 +1,6 @@
 # IceMaze (c) 2012-2013 by Matt Cudmore
 
-refit = () ->
-	return unless theme
-
+refitUI = () ->
 	# get jQuery elements
 	$win = $(window)
 	$menu = $("#menu")
@@ -21,6 +19,7 @@ refit = () ->
 	# resize $wrap to fill window
 	$wrap.height(wrapHeight).width(wrapWidth)
 
+	return unless theme
 	# ask theme to calculate new canvas dimensions
 	[mazeWidth, mazeHeight] = theme.resize([wrapWidth, wrapHeight])
 	# resize $maze to meet the theme's expectations
@@ -37,13 +36,12 @@ refit = () ->
 	$wrap.css("overflow-x", if overW then "scroll" else "hidden")
 	$wrap.css("overflow-y", if overH then "scroll" else "hidden")
 
-	# temporary: need to enable refresh view even in mid-play,
-	# or enable the theme to refresh with anim frames
-	theme.drawMaze()
+	# canvas may have been cleared on resize
+	theme.redraw()
 	return
 
-setUIMode = (toMode) ->
-	switch toMode
+setUIMode = (mode) ->
+	switch mode
 		when "edit"
 			$("#editMode").addClass("active")
 			$("#editMenu").show()
@@ -56,7 +54,7 @@ setUIMode = (toMode) ->
 			$("#editMenu").hide()
 	return
 
-loadThemesMenu = () ->
+loadThemesMenu = (it) ->
 	$menu = $("ul", "#themes").empty()
 	some = false
 	refocus = (n)->->
@@ -66,7 +64,7 @@ loadThemesMenu = () ->
 	for name of themes
 		some = true
 		$("<li><a tabindex='-1' href='#'>#{name}</a></li>")
-		.addClass(if name == activeThemeName then "active" else "")
+		.addClass(if name == it then "active" else "")
 		.appendTo($menu)
 		.on("click", refocus(name)) # closure on name
 	if !some

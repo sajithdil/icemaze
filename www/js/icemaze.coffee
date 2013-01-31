@@ -67,6 +67,7 @@ class Maze
 			else
 				@toggle at, "blocked"
 				alert "Toggle block at #{at}"
+		return true
 
 	isPassable: (at) =>
 		tile = @get at
@@ -76,24 +77,24 @@ class Maze
 		# non-blocked tiles are passable
 		return not tile.blocked
 
-	move: (from, dir) ->
-		switch dir
-			when "left"  then [from[0] - 1, from[1]]
-			when "up"    then [from[0], from[1] - 1]
-			when "right" then [from[0] + 1, from[1]]
-			when "down"  then [from[0], from[1] + 1]
-			else throw "Unrecognized direction #{dir}"
-
-	getPath: (from, dir) =>
+	movePlayer: (from, dir) =>
 		path = [from]
 		while true
-			next = @move from, dir
+			next = @getNextPosition from, dir
 			break if not @isPassable next
 			path.push next
 			# take only one step onto ground
 			break if @is next, ground: true
 			from = next
 		return path
+
+	getNextPosition: (from, dir) ->
+		switch dir
+			when "left"  then [from[0] - 1, from[1]]
+			when "up"    then [from[0], from[1] - 1]
+			when "right" then [from[0] + 1, from[1]]
+			when "down"  then [from[0], from[1] + 1]
+			else throw "Unrecognized direction #{dir}"
 
 	getRelativeDirection: (a, b) ->
 		# a relative to b
