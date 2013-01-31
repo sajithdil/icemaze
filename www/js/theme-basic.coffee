@@ -26,7 +26,7 @@ class ThemeBasic extends Theme
 	avatarFill:     "black"
 	avatarStroke:   "red"
 	avatarLineSize: 1
-	animOneStepMS:  100
+	animOneStepMS:  50
 
 	size: =>
 		# returns the minimum canvas size required for drawing.
@@ -134,9 +134,10 @@ class ThemeBasic extends Theme
 			nowDist = nowFrac * endDist
 
 			# redraw adjacent tiles
+			posPrev = @maze.getNextPosition from, dir, nowStep - 1
 			posCurr = @maze.getNextPosition from, dir, nowStep
 			posNext = @maze.getNextPosition from, dir, nowStep + 1
-			@redraw posCurr, posNext
+			@redraw posPrev, posCurr, posNext
 
 			# draw avatar
 			@c2d.save()
