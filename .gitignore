@@ -1,7 +1,8 @@
 # Junk
-src-old
+js/old
+js/compiled.js
 
 # Vendor
-www/css/bootstrap*
-www/img/glyphicons*
-www/js/vendor
+css/bootstrap*
+img/glyphicons*
+js/vendor
