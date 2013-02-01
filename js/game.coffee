@@ -21,7 +21,6 @@ class Game
 		@set mode: @mode
 
 	click: (ev, $canvas) =>
-		ev.preventDefault()
 		# only respond to click events during edit mode
 		return if @mode isnt "edit"
 		# get click coordinates relative to the canvas
@@ -36,7 +35,6 @@ class Game
 		theme.redraw edat
 
 	keydown: (ev) =>
-		ev.preventDefault()
 		# only respond to keydown events during play mode
 		return if @mode isnt "play"
 		# block further moves during animation

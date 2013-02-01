@@ -101,8 +101,14 @@ $ ->
 		$("#ioTextarea").focus()
 
 	# add maze handlers
-	$("#maze").on "click", (ev)-> game.click ev, $("#maze")
-	$(document).on "keydown", (ev)-> game.keydown ev
+	$("#maze").on "click", (ev)->
+		ev.preventDefault()
+		game.click ev, $("#maze")
+
+	$(document).on "keydown", (ev)->
+		return if game.mode isnt "play"
+		ev.preventDefault()
+		game.keydown ev
 
 	# refit() handles layout
 	$(window).on "resize", refitUI
