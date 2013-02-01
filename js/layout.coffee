@@ -54,31 +54,33 @@ setUIMode = (mode) ->
 			$("#editMenu").hide()
 	return
 
-loadThemesMenu = (it) ->
+loadThemesMenu = (themes, active) ->
 	$menu = $("ul", "#themes").empty()
 	some = false
 	refocus = (n)->->
 		$menu.find("li.active").removeClass("active")
-		$menu.find("li:contains('#{n}')").addClass("active")
+		$menu.find("li[themeID='#{n}']").addClass("active")
 		loadTheme n
-	for name of themes
+	for id, th of themes
 		some = true
-		$("<li><a tabindex='-1' href='#'>#{name}</a></li>")
-		.addClass(if name == it then "active" else "")
+		$("<li><a tabindex='-1' href='#'>#{th[0]}</a></li>")
+		.attr("themeID", id)
+		.addClass(if id == active then "active" else "")
 		.appendTo($menu)
-		.on("click", refocus(name)) # closure on name
+		.on("click", refocus(id)) # closure on id
 	if !some
 		$("<li><a tabindex='-1' href='#'>None</a></li>")
 		.addClass("disabled")
 		.appendTo($menu)
 	return
 
-loadExamplesMenu = () ->
+loadExamplesMenu = (examples) ->
 	$menu = $("ul", "#loadExamples").empty()
 	some = false
-	for id of examples
+	for id, eg of examples
 		some = true
-		$("<li><a tabindex='-1' href='#'>#{id}</a></li>")
+		$("<li><a tabindex='-1' href='#'>#{eg[0]}</a></li>")
+		.attr("egID", id)
 		.appendTo($menu)
 		.on("click", ((i)->-> loadExample i)(id)) # closure on id
 	if !some

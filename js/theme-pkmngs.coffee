@@ -25,3 +25,5 @@ class ThemePkmnGS extends Theme
 
 	drawMaze: (maze) ->
 		@maze = maze if maze?
+
+registerTheme "gs", "Pokémon Gold/Silver theme", new ThemePkmnGS

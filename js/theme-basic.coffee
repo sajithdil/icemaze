@@ -155,3 +155,5 @@ class ThemeBasic extends Theme
 
 			# finished animation?
 			return nowTime < endTime
+
+registerTheme "basic", "Basic theme", new ThemeBasic

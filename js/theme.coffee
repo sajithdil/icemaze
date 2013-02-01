@@ -1,5 +1,10 @@
 # IceMaze (c) 2012-2013 by Matt Cudmore
 
+# globals
+themes = {}
+registerTheme = (id, title, theme) ->
+	themes[id] = [title, theme]
+
 class Theme
 
 	# each theme may define @images, @sprites, and @tiles

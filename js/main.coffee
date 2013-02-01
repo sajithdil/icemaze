@@ -1,9 +1,8 @@
 # IceMaze (c) 2012-2013 by Matt Cudmore
 
 # globals
-game = null
+game = new Game
 theme = null
-themes = {}
 
 loadMaze = (maze) ->
 	return if not maze
@@ -12,18 +11,14 @@ loadMaze = (maze) ->
 	theme?.set maze: maze
 	refitUI()
 
-registerTheme = (name, theme) ->
-	themes[name] = theme
-
-loadTheme = (name) ->
-	if not themes[name]?
-		alert "Theme #{name} is undefined"
-		return
+loadTheme = (id) ->
+	if th = themes[id] then alert "Theme: #{th[0]}"
+	else return alert "Theme[#{id}] is undefined"
 	# unload previous theme
 	theme?.stop()
 	# load new theme
-	theme = themes[name]
-	# configure theme
+	theme = th[1]
+	# [re]configure theme
 	$canvas = $("#maze")[0]
 	theme.prep
 		c2d: $canvas.getContext("2d")
@@ -54,10 +49,6 @@ $ ->
 	# JavaScript enabled; show the menu
 	$("#menu").show()
 
-	game = new Game
-	registerTheme "Basic",     new ThemeBasic
-	registerTheme "PokémonGS", new ThemePkmnGS
-
 	args = getURLParams()
 
 	# load specified maze
@@ -69,7 +60,7 @@ $ ->
 	# load specified theme
 	if args.theme? then loadTheme args.theme
 	# fallback to basic theme
-	if not theme then loadTheme args.theme = "Basic"
+	if not theme then loadTheme args.theme = "basic"
 
 	# set specified mode
 	if args.mode is "play" then setMode "play"
@@ -77,8 +68,8 @@ $ ->
 	else setMode "edit"
 
 	# load dynamic menus
-	loadThemesMenu args.theme
-	loadExamplesMenu()
+	loadThemesMenu themes, args.theme
+	loadExamplesMenu examples
 	#loadStorage()
 	#loadStorageMenus()
 

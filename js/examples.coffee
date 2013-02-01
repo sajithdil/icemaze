@@ -1,12 +1,10 @@
 # IceMaze (c) 2013 by Matt Cudmore
 
-examples =
-	"id": ""
+examples = {
+	"id": ["Name", "Encoded"]
+}
 
 loadExample = (id) ->
-	unless examples[id]?
-		alert "Example #{id} is undefined"
-		return
-	loadMaze decodeMaze examples[id]
-	alert "Example: #{id}"
-	return
+	if eg = examples[id] then alert "Example: #{eg[0]}"
+	else return alert "Example[#{id}] is undefined"
+	loadMaze decodeMaze eg[1]
