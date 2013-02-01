@@ -31,7 +31,7 @@
 				Maze <span class="caret"></span>
 			</a>
 			<ul class="dropdown-menu">
-				<li id="newMaze"><a tabindex="-1" href="#">New...</a></li>
+				<li><a tabindex="-1" href="#newMazeModal" data-toggle="modal">New...</a></li>
 				<li class="dropdown-submenu">
 					<a tabindex="-1" href="#">Load...</a>
 					<ul class="dropdown-menu">
@@ -114,6 +114,37 @@
 
 	</div>
 </div><!-- /menu -->
+
+<!-- New Maze -->
+<div id="newMazeModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="newMazeModalLabel" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 id="newMazeModalLabel">New</h3>
+	</div>
+	<div class="modal-body">
+		<input id="newMazeWidth" placeholder="Width" class="input-small" type="number" min="1" max="64">
+		<input id="newMazeHeight" placeholder="Height" class="input-small" type="number" min="1" max="64">
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button id="newMaze" class="btn btn-primary">Create</button>
+	</div>
+</div>
+
+<!-- I/O modal -->
+<div id="ioModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="ioModalLabel" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 id="ioModalLabel">Copy/Paste</h3>
+	</div>
+	<div class="modal-body">
+		<textarea id="ioTextarea" rows="5" class="input-block-level"></textarea>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button id="ioDecode" class="btn btn-primary">Decode</button>
+	</div>
+</div>
 
 <!-- EDIT modal -->
 <div id="editModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">

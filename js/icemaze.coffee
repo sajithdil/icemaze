@@ -61,7 +61,7 @@ class Maze
 				unl = if locked then "L" else "Unl"
 				alert "#{unl}ock tile at #{at}"
 			when 3
-				special = (@get(at).special || 0) + 1
+				special = ((@get(at).special || 0) + 1) % 32
 				@set at, special: special
 				alert "Change special sprite index to #{special} at #{at}"
 			else

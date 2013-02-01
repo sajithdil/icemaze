@@ -80,6 +80,26 @@ $ ->
 	$("#playMode").on "click", ()-> setMode "play"
 	$("#playRestart").on "click", ()-> game.reset()
 
+	$("#newMaze").on "click", ()->
+		w = parseInt($("#newMazeWidth").val())
+		h = parseInt($("#newMazeHeight").val())
+		loadMaze new Maze(w, h)
+		$("#newMazeModal").modal "hide"
+
+	$("#loadDecode").on "click", ()->
+		$("#ioTextarea").val ""
+		$("#ioModal").modal "show"
+		$("#ioTextarea").focus()
+
+	$("#ioDecode").on "click", ()->
+		loadMaze decodeMaze $("#ioTextarea").val()
+		$("#ioModal").modal "hide"
+
+	$("#saveEncode").on "click", ()->
+		$("#ioTextarea").val encodeMaze game.maze
+		$("#ioModal").modal "show"
+		$("#ioTextarea").focus()
+
 	# add maze handlers
 	$("#maze").on "click", (ev)-> game.click ev, $("#maze")
 	$(document).on "keydown", (ev)-> game.keydown ev

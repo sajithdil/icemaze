@@ -7,6 +7,6 @@ loadExample = (id) ->
 	unless examples[id]?
 		alert "Example #{id} is undefined"
 		return
-	loadDecode examples[id]
+	loadMaze decodeMaze examples[id]
 	alert "Example: #{id}"
 	return
