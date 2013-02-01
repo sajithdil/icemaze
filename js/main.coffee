@@ -6,6 +6,7 @@ theme = null
 themes = {}
 
 loadMaze = (maze) ->
+	return if not maze
 	theme?.stop()
 	game.set maze: maze
 	theme?.set maze: maze
@@ -15,7 +16,7 @@ registerTheme = (name, theme) ->
 	themes[name] = theme
 
 loadTheme = (name) ->
-	unless themes[name]?
+	if not themes[name]?
 		alert "Theme #{name} is undefined"
 		return
 	# unload previous theme
@@ -59,15 +60,21 @@ $ ->
 
 	args = getURLParams()
 
-	if args.maze? then loadDecode args.maze
+	# load specified maze
+	if args.maze? then loadMaze decodeMaze args.maze
 	else if args.eg? then loadExample args.eg
-	else loadMaze new Maze(10, 10)
+	# fallback to new maze
+	if not game.maze then loadMaze new Maze(10, 10)
 
-	args.theme ?= "Basic"
-	loadTheme args.theme
+	# load specified theme
+	if args.theme? then loadTheme args.theme
+	# fallback to basic theme
+	if not theme then loadTheme args.theme = "Basic"
 
-	args.mode ?= "edit"
-	setMode args.mode
+	# set specified mode
+	if args.mode is "play" then setMode "play"
+	# default to edit mode
+	else setMode "edit"
 
 	# load dynamic menus
 	loadThemesMenu args.theme
