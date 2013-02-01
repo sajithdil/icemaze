@@ -18,14 +18,16 @@ class ThemeBasic extends Theme
 	rockRadiusSize: .1
 	rockColour:     "gray"
 
-	eeCircleSize:   .6
+	eeCircleSize:   .65
 	entryColour:    "green"
 	exitColour:     "orange"
+	eeInnerSize:    .4
+	eeInnerColour:  "white"
 
-	avatarSize:     .5
-	avatarFill:     "black"
-	avatarStroke:   "red"
-	avatarLineSize: 1
+	avCircleSize:   .5
+	avCircleColour: "black"
+	avInnerSize:    .4
+	avInnerColour:  "red"
 	animOneStepMS:  50
 
 	size: =>
@@ -96,6 +98,8 @@ class ThemeBasic extends Theme
 		if tile.entry or tile.exit
 			@traceCircleTile @eeCircleSize
 			@fill if tile.entry then @entryColour else @exitColour
+			@traceCircleTile @eeInnerSize
+			@fill @eeInnerColour
 
 		@c2d.restore()
 
@@ -148,9 +152,10 @@ class ThemeBasic extends Theme
 				when "right" then @c2d.translate nowDist, 0
 				when "up" then    @c2d.translate 0, -nowDist
 				when "down" then  @c2d.translate 0, nowDist
-			@traceCircleTile @avatarSize
-			@fill @avatarFill
-			@stroke @avatarLineSize, @avatarStroke
+			@traceCircleTile @avCircleSize
+			@fill @avCircleColour
+			@traceCircleTile @avInnerSize
+			@fill @avInnerColour
 			@c2d.restore()
 
 			# finished animation?
