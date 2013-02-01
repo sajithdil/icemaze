@@ -23,7 +23,4 @@ class ThemePkmnGS extends Theme
 		ice:     ["click", 0]
 		ground:  ["click", 0]
 
-	drawMaze: (maze) ->
-		@maze = maze if maze?
-
 registerTheme "gs", "Pokémon Gold/Silver theme", new ThemePkmnGS

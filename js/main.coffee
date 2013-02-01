@@ -7,8 +7,8 @@ theme = null
 loadMaze = (maze) ->
 	return if not maze
 	theme?.stop()
-	game.set maze: maze
 	theme?.set maze: maze
+	game.set maze: maze
 	refitUI()
 
 loadTheme = (id) ->

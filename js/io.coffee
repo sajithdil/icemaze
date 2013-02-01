@@ -22,19 +22,20 @@ encodeMaze = (maze) ->
 	return window.btoa String.fromCharCode data...
 
 decodeMaze = (data) ->
-	data = window.atob(data)
+	data = window.atob data
 	i = 0
-	w = data.charCodeAt(i++)
-	h = data.charCodeAt(i++)
-	maze = new Maze(w, h)
+	# 1 byte per value
+	maze = new Maze(data.charCodeAt(i++), data.charCodeAt(i++))
 	maze.entry = [data.charCodeAt(i++), data.charCodeAt(i++)]
 	maze.exit = [data.charCodeAt(i++), data.charCodeAt(i++)]
-	# read tiles
-	for x in [0 .. w - 1]
-		for y in [0 .. h - 1]
+	# 1 byte per tile
+	for x in [0 .. maze.width - 1]
+		for y in [0 .. maze.height - 1]
 			props = data.charCodeAt(i++)
 			maze.set [x, y],
+				# 5 bits for special
 				special: props & 0x31
+				# 3 bits for properties
 				locked: (props & (1 << 7)) > 0
 				blocked: (props & (1 << 6)) > 0
 				ground: (props & (1 << 5)) > 0

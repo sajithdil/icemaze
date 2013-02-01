@@ -127,18 +127,18 @@ class Theme
 	traceRounded: (x, y, w, h, r) =>
 		# thanks http://stackoverflow.com/a/3368118
 		@c2d.beginPath()
-		@c2d.moveTo(x + r, y);
-		@c2d.lineTo(x + w - r, y);
-		@c2d.quadraticCurveTo(x + w, y, x + w, y + r);
-		@c2d.lineTo(x + w, y + h - r);
-		@c2d.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-		@c2d.lineTo(x + r, y + h);
-		@c2d.quadraticCurveTo(x, y + h, x, y + h - r);
-		@c2d.lineTo(x, y + r);
-		@c2d.quadraticCurveTo(x, y, x + r, y);
+		@c2d.moveTo(x + r, y)
+		@c2d.lineTo(x + w - r, y)
+		@c2d.quadraticCurveTo(x + w, y, x + w, y + r)
+		@c2d.lineTo(x + w, y + h - r)
+		@c2d.quadraticCurveTo(x + w, y + h, x + w - r, y + h)
+		@c2d.lineTo(x + r, y + h)
+		@c2d.quadraticCurveTo(x, y + h, x, y + h - r)
+		@c2d.lineTo(x, y + r)
+		@c2d.quadraticCurveTo(x, y, x + r, y)
 		@c2d.closePath()
 
 	traceCircle: (x, y, r) =>
 		@c2d.beginPath()
-		@c2d.arc x, y, r, 0, Math.PI * 2, false
+		@c2d.arc(x, y, r, 0, Math.PI * 2, false)
 		@c2d.closePath()

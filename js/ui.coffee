@@ -56,37 +56,27 @@ setUIMode = (mode) ->
 
 loadThemesMenu = (themes, active) ->
 	$menu = $("ul", "#themes").empty()
-	some = false
-	refocus = (n)->->
+	refocus = (i)->->
 		$menu.find("li.active").removeClass("active")
-		$menu.find("li[themeID='#{n}']").addClass("active")
-		loadTheme n
+		$menu.find("li[themeID='#{i}']").addClass("active")
+		loadTheme i
 	for id, th of themes
-		some = true
 		$("<li><a tabindex='-1' href='#'>#{th[0]}</a></li>")
 		.attr("themeID", id)
 		.addClass(if id == active then "active" else "")
 		.appendTo($menu)
 		.on("click", refocus(id)) # closure on id
-	if !some
-		$("<li><a tabindex='-1' href='#'>None</a></li>")
-		.addClass("disabled")
-		.appendTo($menu)
 	return
 
 loadExamplesMenu = (examples) ->
 	$menu = $("ul", "#loadExamples").empty()
-	some = false
+	handler = (i)->->
+		loadExample i
 	for id, eg of examples
-		some = true
 		$("<li><a tabindex='-1' href='#'>#{eg[0]}</a></li>")
 		.attr("egID", id)
 		.appendTo($menu)
-		.on("click", ((i)->-> loadExample i)(id)) # closure on id
-	if !some
-		$("<li><a tabindex='-1' href='#'>None</a></li>")
-		.addClass("disabled")
-		.appendTo($menu)
+		.on("click", handler(id)) # closure on id
 	return
 
 loadStorageMenus = () ->
