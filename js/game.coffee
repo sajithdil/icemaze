@@ -1,57 +1,96 @@
 # IceMaze (c) 2012-2013 by Matt Cudmore
 
-class Game
+currMaze = null
+currMode = null # "edit" or "play"
+currTheme = null
+currPPost = null # player position [x, y]
 
-	maze: null
-	mode: null # "edit" or "play"
-	playerPosition: null # [x, y]
+setMaze = (maze) ->
+	currMaze = maze if maze
+	currTheme?.prep maze: currMaze
+	# reset with new maze
+	refitUI()
+	resetGame()
 
-	set: (attrs) =>
-		@maze = attrs.maze if attrs.maze?
-		@mode = attrs.mode if attrs.mode?
-		return unless theme?
-		theme.stop()
-		theme.redraw()
-		if attrs.mode is "play"
-			@playerPosition = @maze.entry
-			alert "Begin game at #{@playerPosition}"
-			theme.movePlayer @playerPosition, "down"
+setMode = (mode) ->
+	return if currMode is mode #already
+	if mode in ["edit", "play"] then alert "Begin #{mode} mode"
+	else return alert "Mode[#{mode}] is undefined"
 
-	reset: =>
-		@set mode: @mode
+	currMode = mode if mode
+	currTheme?.prep mode: currMode
+	setUIMode currMode
+	# reset with new mode
+	resetGame()
 
-	click: (ev, $canvas) =>
-		# only respond to click events during edit mode
-		return if @mode isnt "edit"
-		# get click coordinates relative to the canvas
-		offs = $canvas.offset()
-		relX = ev.pageX - offs.left
-		relY = ev.pageY - offs.top
-		edat = theme.at relX, relY
-		# count active meta keys
-		metaCount = ev.altKey + ev.ctrlKey + ev.shiftKey
-		# pass only what is needed
-		@maze.click edat, metaCount
-		theme.redraw edat
+setTheme = (thID) ->
+	if th = themes[thID] then alert "Theme: #{th[0]}"
+	else return alert "Theme[#{thID}] is undefined"
 
-	keydown: (ev) =>
-		# only respond to keydown events during play mode
-		return if @mode isnt "play"
-		# block further moves during animation
-		return if theme.busy()
-		# get the direction of which arrow key was pressed
-		dirkeys = {37: "left", 38: "up", 39: "right", 40: "down"}
-		direction = dirkeys[ev.which]
-		# ignore unrecognized keys
-		return if not direction
-		# get the movement path
-		path = @maze.movePlayer @playerPosition, direction
-		endpoint = path[path.length - 1]
-		# is the endpoint a win?
-		winner = @maze.is endpoint, exit: true
-		# log the move
-		alert "Move #{direction} to #{endpoint}"
-		# tell the theme to draw the movement
-		theme.movePlayer @playerPosition, direction, path, =>
-			@playerPosition = endpoint
-			alert "WIN!" if winner
+	# unload previous
+	currTheme?.stop()
+	# load theme
+	currTheme = th[1]
+	# configure theme
+	currTheme.prep
+		c2d: $maze[0].getContext("2d")
+		raf: (fn)-> window.requestAnimationFrame(fn, $maze[0])
+		caf: (id)-> window.cancelAnimationFrame(id)
+		maze: currMaze, mode: currMode
+	# resume with new theme
+	refitUI()
+	resumeGame()
+
+resetGame = ->
+	currTheme?.stop()
+	if currMode is "play"
+		currPPost = currMaze.entry
+		alert "Begin game at #{@currPPost}"
+	resumeGame()
+
+resumeGame = ->
+	currTheme?.redraw()
+	if currMode is "play"
+			currTheme?.movePlayer currPPost, "down"
+
+##################################################
+# user interactions
+
+handleClick = (ev) ->
+	ev.preventDefault()
+	# only respond to click events during edit mode
+	return if currMode isnt "edit"
+	# get click coordinates relative to the canvas
+	offs = $maze.offset()
+	relX = ev.pageX - offs.left
+	relY = ev.pageY - offs.top
+	edat = currTheme.at relX, relY
+	# count active meta keys
+	metaCount = ev.altKey + ev.ctrlKey + ev.shiftKey
+	# pass only what is needed
+	currMaze.click edat, metaCount
+	currTheme.redraw edat
+
+handleKeydown = (ev) ->
+	# only respond to keydown events during play mode
+	return if currMode isnt "play"
+	# intercept keys in play mode
+	ev.preventDefault()
+	# block further moves during animation
+	return if currTheme.busy()
+	# get the direction of which arrow key was pressed
+	dirkeys = {37: "left", 38: "up", 39: "right", 40: "down"}
+	direction = dirkeys[ev.which]
+	# ignore unrecognized keys
+	return if not direction
+	# get the movement path
+	path = currMaze.movePlayer currPPost, direction
+	endpoint = path[path.length - 1]
+	# is the endpoint a win?
+	winner = currMaze.is endpoint, exit: true
+	# log the move
+	alert "Move #{direction} to #{endpoint}"
+	# tell the theme to draw the movement
+	currTheme.movePlayer currPPost, direction, path, =>
+		currPPost = endpoint
+		alert "WIN!" if winner

@@ -35,13 +35,13 @@
 				<li class="dropdown-submenu">
 					<a tabindex="-1" href="#">Load...</a>
 					<ul class="dropdown-menu">
-						<li id="loadExamples" class="dropdown-submenu">
+						<li id="examplesMenu" class="dropdown-submenu">
 							<a tabindex="-1" href="#">Examples</a>
 							<ul class="dropdown-menu">
 								<li class="disabled"><a tabindex="-1" href="#">None</a></li>
 							</ul>
 						</li>
-						<li id="loadSaved" class="dropdown-submenu">
+						<li id="loadSavedMenu" class="dropdown-submenu">
 							<a tabindex="-1" href="#">Saved</a>
 							<ul class="dropdown-menu">
 								<li class="disabled"><a tabindex="-1" href="#">None</a></li>
@@ -55,7 +55,7 @@
 					<a tabindex="-1" href="#">Save...</a>
 					<ul class="dropdown-menu">
 						<li id="saveAs"><a tabindex="-1" href="#">Save As...</a></li>
-						<li id="saveOverwrite" class="dropdown-submenu">
+						<li id="saveOverMenu" class="dropdown-submenu">
 							<a tabindex="-1" href="#">Overwrite</a>
 							<ul class="dropdown-menu">
 								<li class="disabled"><a tabindex="-1" href="#">None</a></li>
@@ -66,7 +66,7 @@
 					</ul>
 				</li>
 				<li class="divider"></li>
-				<li id="themes" class="dropdown-submenu">
+				<li id="themesMenu" class="dropdown-submenu">
 					<a tabindex="-1" href="#">Themes</a>
 					<ul class="dropdown-menu">
 						<li class="disabled"><a tabindex="-1" href="#">None</a></li>
@@ -105,8 +105,8 @@
 				Help <span class="caret"></span>
 			</a>
 			<ul class="dropdown-menu">
-				<li><a tabindex="-1" href="#editModal" data-toggle="modal">How to Edit</a></li>
-				<li><a tabindex="-1" href="#playModal" data-toggle="modal">How to Play</a></li>
+				<li><a tabindex="-1" href="#helpEditModal" data-toggle="modal">How to Edit</a></li>
+				<li><a tabindex="-1" href="#helpPlayModal" data-toggle="modal">How to Play</a></li>
 				<li class="divider"></li>
 				<li><a tabindex="-1" href="#aboutModal" data-toggle="modal">About</a></li>
 			</ul>
@@ -147,10 +147,10 @@
 </div>
 
 <!-- EDIT modal -->
-<div id="editModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+<div id="helpEditModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="helpEditModalLabel" aria-hidden="true">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		<h3 id="editModalLabel">How to Edit</h3>
+		<h3 id="helpEditModalLabel">How to Edit</h3>
 	</div>
 	<div class="modal-body">
 		<p>((Edit instructions))</p>
@@ -158,10 +158,10 @@
 </div>
 
 <!-- PLAY modal -->
-<div id="playModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="playModalLabel" aria-hidden="true">
+<div id="helpPlayModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="helpPlayModalLabel" aria-hidden="true">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		<h3 id="playModalLabel">How to Play</h3>
+		<h3 id="helpPlayModalLabel">How to Play</h3>
 	</div>
 	<div class="modal-body">
 		<p>((Play instructions))</p>

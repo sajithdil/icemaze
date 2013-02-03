@@ -7,7 +7,7 @@ examples = {
 	]
 }
 
-loadExample = (id) ->
-	if eg = examples[id] then alert "Example: #{eg[0]}"
-	else return alert "Example[#{id}] is undefined"
-	loadMaze decodeMaze eg[1]
+loadExample = (egID) ->
+	if eg = examples[egID] then alert "Example: #{eg[0]}"
+	else return alert "Example[#{egID}] is undefined"
+	setMaze decodeMaze eg[1]
