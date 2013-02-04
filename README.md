@@ -8,9 +8,9 @@ of Pokémon Gold and Silver.
 I remember being 11 years old and feeling impressed with this new kind of
 puzzle. Regular mazes no longer seemed so interesting. My Nan and I often made
 puzzles for one another when I visited, and I wanted to introduce her to the
-ice path. My mazes weren't clever enough. Either a maze had too many ways
-through it, or the single solution was obvious. Soon I realized that regular
-mazes are much easier to create.
+ice path. But my ice mazes weren't clever enough. Either a maze had too many
+ways through it, or the single solution was obvious. Soon I realized that
+regular mazes are much easier to create.
 
 Recently the ice path returned to my attention. I would like to make it easy
 for people to enjoy this.
@@ -19,9 +19,9 @@ for people to enjoy this.
 How to play
 -----------
 
-An ice maze may be drawn on grid paper: Some tiles are filled-in (blocks), and
-some are blank (ice). One tile is marked as the entrance, and another as the
-exit.
+An ice maze may be drawn on grid paper: Some tiles are filled-in (obstacles),
+and some are blank (ice). One tile is marked as the entrance, and another as
+the exit.
 
 The player begins by placing a finger on the entrance, and moving the finger
 upward, downward, leftward, or rightward along blank tiles until reaching the

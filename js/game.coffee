@@ -43,7 +43,7 @@ resetGame = ->
 	currTheme?.stop()
 	if currMode is "play"
 		currPPost = currMaze.entry
-		alert "Begin game at #{@currPPost}"
+		alert "Begin game at #{currPPost}"
 	resumeGame()
 
 resumeGame = ->

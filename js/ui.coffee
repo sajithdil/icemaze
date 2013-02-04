@@ -30,10 +30,13 @@ $saveEncodeModal  = $("#ioModal")
 $themesList       = $("ul", "#themesMenu")
 $print            = $("#print")
 
-$editMode         = $("#editMode")
+$editMode         = $("#editMode, #yayGoEdit")
 $editMenu         = $("#editMenu")
+$editShowSolns    = $("#editShowSolns")
+$editClearLocks   = $("#editClearLocks")
+$editClearSprites = $("#editClearSpecials")
 
-$playMode         = $("#playMode")
+$playMode         = $("#playMode, #yayGoPlay")
 $playMenu         = $("#playMenu")
 $playRestart      = $("#playRestart")
 

@@ -1,6 +1,8 @@
 # IceMaze (c) 2012-2013 by Matt Cudmore
 # ThemePkmnGS to draw the maze using the original Pokémon Gold/Silver tileset
 
+# todo test [0,0] for matte type
+
 class ThemePkmnGS extends Theme
 
 	dims:
@@ -23,4 +25,4 @@ class ThemePkmnGS extends Theme
 		ice:     ["click", 0]
 		ground:  ["click", 0]
 
-registerTheme "gs", "Pokémon Gold/Silver theme", new ThemePkmnGS
+#registerTheme "gs", "Pokémon Gold/Silver theme", new ThemePkmnGS
