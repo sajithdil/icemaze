@@ -1,56 +1,63 @@
 Intro
 -----
 
-I was a child enthralled by puzzles and Pokémon.
-The [Ice Path](http://bulbapedia.bulbagarden.net/wiki/Ice_Path) of Pokémon
-Gold and Silver presented a new type of puzzle, and a brief but exciting
-challenge, which stuck with me. Recently I tried to create an "ice maze" of my
-own, to share with a friend; I became frustrated with many failed attempts on
-paper, and thence decided to write this program to generate and analyze
-millions of ice mazes in search of greatness. Also this seemed a timely
-opportunity to learn and practise programming in [Go](http://golang.org/).
+This project is inspired by the
+[Ice Path](http://bulbapedia.bulbagarden.net/wiki/Ice_Path)
+of Pokémon Gold and Silver.
+
+I remember being 11 years old and feeling impressed with this new kind of
+puzzle. Regular mazes no longer seemed so interesting. My Nan and I often made
+puzzles for one another when I visited, and I wanted to introduce her to the
+ice path. My mazes weren't clever enough. Either a maze had too many ways
+through it, or the single solution was obvious. Soon I realized that regular
+mazes are much easier to create.
+
+Recently the ice path returned to my attention. I would like to make it easy
+for people to enjoy this.
 
 
 How to play
 -----------
 
-An ice maze is drawn on a grid: Some tiles are filled-in (blocks), and some
-are blank (ice). One tile is marked as entrance/start, and another as
-exit/finish. On paper, the player shouldn't use a pen, but simply the tip of
-one's finger. Beginning on the entrance tile, the player must slide one's
-finger in a straight line across the ice until reaching a block, and stop on
-the tile before the block. Now a new direction must be chosen, and the player
-slides around the maze while seeking a path to the exit. The player may slide
-_through_ the exit if there is no block in the way, but must stop at the exit
-(by reaching a block) to solve the ice maze.
+An ice maze may be drawn on grid paper: Some tiles are filled-in (blocks), and
+some are blank (ice). One tile is marked as the entrance, and another as the
+exit.
 
-The primary differences from a traditional maze are that the walls are not
-drawn in (thus possible paths are not apparent), disjunct paths may
-crisscross, the player cannot reverse all movements, and the player may
-encounter and slide across the exit without solving the puzzle.
+The player begins by placing a finger on the entrance, and moving the finger
+upward, downward, leftward, or rightward along blank tiles until reaching the
+tile before a filled-in block. Thus the player slides along the ice, until
+hitting an obstacle. Then repeat, choosing a new direction, until the exit is
+reached. The player would slide _through_ the exit if there were no subsequent
+block in the direction of the slide; to solve the maze, the player must stop
+on the exit tile.
 
 
 An ideal maze
 --------------
 
 * Has a single solution, no short-cuts
-* Has fall-off points, dead-ends, and hidden traps along the exit path
-* May include a pot of gold impossible to reach
-* Should be minimal, rather than an enormous exhausting labyrinth,
-  so that players go in circles wondering "What am I missing?"
-* Eludes me
+* Has forks, dead-ends, and hidden traps along the way
+* Should be deceptively simple,
+  so players go in circles wondering "What am I missing?"
 
 
 Features
 --------
 
-* Web-based front-end
-* Create, design, and resize mazes in the browser
-* Play (direct an avatar using the arrow keys) to solve in the browser
-* Print for offline play
-* Back-end designed to run on
-  [Google App Engine](https://developers.google.com/appengine/)
-* Server can find all solutions, dead-ends, and traps, which are displayed in
-  the browser
-* Server can generate a random maze to meet user-defined criteria, or optimize
-  a given maze without altering locked tiles
+* Create mazes in the browser
+* Ice tiles, Walkable tiles, Obstacle tiles
+* Play using the arrow keys in the browser
+* Option to view solutions, dead-ends, and traps in the browser
+
+
+Plans
+-----
+
+* Print to paper
+* Option to automatically generate mazes to meet user-defined criteria
+* Drag-and-drop to reposition entry and exit
+* Option to resize (extend or crop) by dragging on an edge of the maze
+* Pokémon GS theme with alternative sprites to design fancy maps
+* Use browser storage as a way to save and load mazes locally
+* Support tablet touch swipes to move player during play mode
+* Possibly implement an isometric theme later
