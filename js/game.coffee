@@ -33,9 +33,7 @@ setTheme = (thID) ->
 	currTheme = th[1]
 	# configure theme
 	currTheme.prep
-		c2d: $maze[0].getContext("2d")
-		raf: (fn)-> window.requestAnimationFrame(fn, $maze[0])
-		caf: (id)-> window.cancelAnimationFrame(id)
+		c2d: $maze[0].getContext("2d"), el: $maze[0]
 		maze: currMaze, mode: currMode
 	# resume with new theme
 	refitUI()

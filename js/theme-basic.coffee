@@ -131,7 +131,7 @@ class ThemeBasic extends Theme
 		endTime = endStep * @animOneStepMS
 		endDist = endStep * @tileSize
 
-		@anim "playerMove", callback, (nowTime) =>
+		@anim callback, (nowTime) =>
 			if nowTime > endTime then nowTime = endTime
 			nowFrac = (nowTime / endTime) or 0
 			nowStep = Math.floor (nowFrac * endStep)
@@ -158,7 +158,7 @@ class ThemeBasic extends Theme
 			@fill @avInnerColour
 			@c2d.restore()
 
-			# finished animation?
+			# request another frame?
 			return nowTime < endTime
 
 registerTheme "basic", "Basic theme", new ThemeBasic

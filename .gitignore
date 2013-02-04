@@ -1,6 +1,7 @@
 # Junk
 js/old
-js/compiled.js
+js/*.js
+Cakefile
 
 # Vendor
 css/bootstrap*

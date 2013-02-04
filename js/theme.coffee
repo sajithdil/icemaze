@@ -16,9 +16,8 @@ class Theme
 	# each theme may access @canvasSize
 	canvasSize: [0, 0]
 
-	# each theme should record active animations in @anims
-	anims: {}
-	animsCount: 0
+	# controls for the active animation
+	currAnim: null
 
 	constructor: ->
 		# preload images
@@ -33,43 +32,19 @@ class Theme
 
 	set: (attrs) =>
 		@c2d = attrs.c2d if attrs.c2d?
-		@raf = attrs.raf if attrs.raf?
-		@caf = attrs.caf if attrs.caf?
+		@el = attrs.el if attrs.el
 		@maze = attrs.maze if attrs.maze?
 		@mode = attrs.mode if attrs.mode?
 
-	anim: (animID, cb, fn) =>
-		# fn should return true for another frame
-		# cb will be called when done
-		@stop animID
-		cb ?= -> # empty callback
-		begun = null
-		next = =>
-			@anims[animID] = @raf (time) =>
-				begun ?= time
-				# pass fn a duration since anim begin
-				if fn(time - begun) then next()
-				else @stop animID; cb()
-		@animsCount++
-		next()
+	anim: (cb, fn) =>
+		@stop()
+		@currAnim = startAnim fn, cb, @el
 
 	busy: =>
-		@animsCount > 0
+		@currAnim?.busy()
 
-	stop: (animIDs...) =>
-		if animIDs.length > 0
-			for animID in animIDs
-				continue if not @anims[animID]
-				@caf @anims[animID]
-				delete @anims[animID]
-				@animsCount--
-		else # stop all animations
-			for animID of @anims
-				continue if not @anims[animID]
-				@caf @anims[animID]
-				delete @anims[animID]
-				@animsCount--
-		return
+	stop: () =>
+		@currAnim?.cancel()
 
 	resize: (min) =>
 		[w1, h1] = min
