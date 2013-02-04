@@ -55,6 +55,7 @@ resumeGame = ->
 # user interactions
 
 handleClick = (ev) ->
+	# intercept all canvas clicks
 	ev.preventDefault()
 	# only respond to click events during edit mode
 	return if currMode isnt "edit"
@@ -72,8 +73,6 @@ handleClick = (ev) ->
 handleKeydown = (ev) ->
 	# only respond to keydown events during play mode
 	return if currMode isnt "play"
-	# intercept keys in play mode
-	ev.preventDefault()
 	# block further moves during animation
 	return if currTheme.busy()
 	# get the direction of which arrow key was pressed

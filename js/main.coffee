@@ -47,6 +47,7 @@ $ ->
 	$newMaze.on "click", ()->
 		w = parseInt($newMazeWidth.val())
 		h = parseInt($newMazeHeight.val())
+		setMode "edit"
 		setMaze new Maze(w, h)
 		$newMazeModal.modal "hide"
 
