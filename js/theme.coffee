@@ -71,8 +71,18 @@ class Theme
 		# use @anim(id,fnNextFrame) to request an animation frame.
 		# call callback when animation completes.
 
+	#fanfare: =>
+		# acknowledge a win with visual feedback.
+
 	##################################################
 	# drawing utility methods:
+
+	clearCanvas: () =>
+		@c2d.clearRect(0, 0, @canvasSize[0], @canvasSize[1])
+
+	fillCanvas: (style) =>
+		@c2d.fillStyle = style
+		@c2d.fillRect(0, 0, @canvasSize[0], @canvasSize[1])
 
 	drawSprite: (spriteID) =>
 		# @c2d.translate to dest location before calling drawSprite

@@ -47,9 +47,15 @@ resetGame = ->
 	resumeGame()
 
 resumeGame = ->
+	currTheme?.stop()
+	currTheme?.clearCanvas()
 	currTheme?.redraw()
 	if currMode is "play"
 			currTheme?.movePlayer currPPost, "down"
+
+winGame = ->
+	alert "WIN!"
+	currTheme.fanfare()
 
 ##################################################
 # user interactions
@@ -90,4 +96,4 @@ handleKeydown = (ev) ->
 	# tell the theme to draw the movement
 	currTheme.movePlayer currPPost, direction, path, =>
 		currPPost = endpoint
-		alert "WIN!" if winner
+		winGame() if winner

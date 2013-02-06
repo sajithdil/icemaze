@@ -5,6 +5,10 @@ class ThemeBasic extends Theme
 
 	tileSize:       40 # px for tile width and height
 	marginSize:     20 # px margin around maze
+	winTextFont:   "30px sans-serif"
+	winTextTop:     30
+
+	matteColour:    "black"
 
 	bgColour:       "white"
 	bgLockColour:   "yellow"
@@ -54,12 +58,14 @@ class ThemeBasic extends Theme
 		return [tileX, tileY]
 
 	redraw: (positions...) => if @maze?
+		if positions.length == 0
+			@clearCanvas()
+			@drawMatte()
 		@c2d.save()
 		@c2d.translate @offsets()...
 		if positions.length > 0
 			@drawTile at for at in positions
 		else # redraw matte and maze
-			@drawMatte()
 			[w, h] = [@maze.width - 1, @maze.height - 1]
 			@drawTile [x, y] for x in [0..w] for y in [0..h]
 		@c2d.restore()
@@ -68,9 +74,10 @@ class ThemeBasic extends Theme
 	# tile drawing:
 
 	drawMatte: =>
+		offs = @offsets()
 		wh = @size()
-		@traceSquare -@marginSize, -@marginSize, wh[0], wh[1]
-		@fill "black"
+		@traceSquare offs[0] - @marginSize, offs[1] - @marginSize, wh[0], wh[1]
+		@fill @matteColour
 
 	drawTile: (at) =>
 		tile = @maze.get at
@@ -156,6 +163,28 @@ class ThemeBasic extends Theme
 			@fill @avCircleColour
 			@traceCircleTile @avInnerSize
 			@fill @avInnerColour
+			@c2d.restore()
+
+			# request another frame?
+			return nowTime < endTime
+
+	##################################################
+	# player winning
+
+	fanfare: =>
+		offs = @offsets()
+		mwid = @maze.width * @tileSize
+		endTime = 1000
+
+		@anim null, (nowTime) =>
+			if nowTime > endTime then nowTime = endTime
+
+			@fillCanvas "rgba(0,0,0,.1)"
+			@c2d.save()
+			@c2d.font = @winTextFont
+			@c2d.textAlign = "center"
+			@c2d.fillStyle = "white"
+			@c2d.fillText "W I N", offs[0] + mwid/2, offs[1] + @winTextTop
 			@c2d.restore()
 
 			# request another frame?
