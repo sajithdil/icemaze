@@ -6,7 +6,7 @@ Includes
 
 ### [jQuery](http://jquery.com/)
 
-* `jquery-1.8.3.min.js`
+* `jquery-1.9.1.min.js`
   (default build, for now)
 
 ### [Bootstrap](http://twitter.github.com/bootstrap/)
@@ -22,4 +22,9 @@ Includes
 ### [requestAnimationFrame polyfill](https://gist.github.com/1579671)
 
 * `rAF.js`
-  (thanks to paulirish and friends)
+  (thanks to @paulirish and friends)
+
+### [jQuery Mouse Wheel Plugin](https://github.com/brandonaaron/jquery-mousewheel)
+
+* `jquery-mousewheel.js`
+  (thanks to @brandonaaron)

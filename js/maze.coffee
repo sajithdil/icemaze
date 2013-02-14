@@ -57,17 +57,23 @@ class Maze
 				@toggle at, "ground"
 				alert "Toggle ground at #{at}"
 			when 2
+				special = ((@get(at).special || 0) + 1) % 32
+				@set at, special: special
+				alert "Set sprite index to #{special} at #{at}"
+			when 3
 				locked = @toggle at, "locked"
 				unl = if locked then "L" else "Unl"
 				alert "#{unl}ock tile at #{at}"
-			when 3
-				special = ((@get(at).special || 0) + 1) % 32
-				@set at, special: special
-				alert "Change special sprite index to #{special} at #{at}"
 			else
 				@toggle at, "blocked"
 				alert "Toggle block at #{at}"
 		return true
+
+	scroll: (at, delta) =>
+		dir = if delta > 0 then 1 else -1
+		special = ((@get(at).special || 0) + dir) % 32
+		if special < 0 then special += 32
+		@set at, special: special
 
 	isPassable: (at) =>
 		tile = @get at

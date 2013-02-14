@@ -67,6 +67,7 @@ $ ->
 
 	# add maze handlers
 	$maze.on "click", handleClick
+	$maze.on "mousewheel", handleScroll
 	$(document).on "keydown", handleKeydown
 
 	# refitUI() handles layout

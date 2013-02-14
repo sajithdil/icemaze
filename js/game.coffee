@@ -76,6 +76,20 @@ handleClick = (ev) ->
 	currMaze.click edat, metaCount
 	currTheme.redraw edat
 
+handleScroll = (ev, delta) ->
+	# intercept all canvas scrolls
+	ev.preventDefault()
+	# only respond to scroll events during edit mode
+	return if currMode isnt "edit"
+	# get mouse coordinates relative to the canvas
+	offs = $maze.offset()
+	relX = ev.pageX - offs.left
+	relY = ev.pageY - offs.top
+	edat = currTheme.at relX, relY
+	# pass only what is needed
+	currMaze.scroll edat, delta
+	currTheme.redraw edat
+
 handleKeydown = (ev) ->
 	# only respond to keydown events during play mode
 	return if currMode isnt "play"
