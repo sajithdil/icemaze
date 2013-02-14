@@ -1,5 +1,5 @@
-./www/js/vendor
-===============
+./js/vendor
+===========
 
 Includes
 --------
@@ -26,5 +26,5 @@ Includes
 
 ### [jQuery Mouse Wheel Plugin](https://github.com/brandonaaron/jquery-mousewheel)
 
-* `jquery-mousewheel.js`
+* `jquery.mousewheel.js`
   (thanks to @brandonaaron)
