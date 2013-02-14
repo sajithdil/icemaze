@@ -19,11 +19,23 @@ class Theme
 	# controls for the active animation
 	currAnim: null
 
-	constructor: ->
+	constructor: (cbReady, cbError) ->
+		allReady = ()=> @ready = true; cbReady() if cbReady
+		# count images
+		remaining = 0
+		remaining++ for i of @images
+		# return if none
+		return allReady() if remaining is 0
+		# callback closures
+		imgLoaded = (src)=> ()=> allReady() if --remaining is 0
+		imgFailed = (src)=> ()=> cbError("Failed to load #{src}") if cbError
 		# preload images
 		for imgID, imgFile of @images
-			@images[imgID] = img = new Image()
+			img = new Image()
+			img.onload = imgLoaded(imgFile)
+			img.onerror = imgFailed(imgFile)
 			img.src = imgFile
+			@images[imgID] = img
 		return
 
 	prep: (attrs) =>
