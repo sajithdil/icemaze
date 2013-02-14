@@ -94,10 +94,10 @@ class ThemeBasic extends Theme
 
 		# floor -- square
 		@traceSquareTile @floorTileSize
-		@fill if tile.ground then @dirtColour else @iceColour
+		@fill if tile.walkable then @dirtColour else @iceColour
 
 		# objects -- rounded square
-		if tile.blocked
+		if tile.obstacle
 			@traceRoundedTile @rockTileSize, @rockRadiusSize
 			@fill @rockColour
 

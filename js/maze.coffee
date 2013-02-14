@@ -54,8 +54,9 @@ class Maze
 		return unless @is at, inside: true
 		switch metac
 			when 1
-				@toggle at, "ground"
-				alert "Toggle ground at #{at}"
+				walkable = @toggle at, "walkable"
+				un = if walkable then "" else "un"
+				alert "Set #{un}walkable at #{at}"
 			when 2
 				special = ((@get(at).special || 0) + 1) % 32
 				@set at, special: special
@@ -65,8 +66,9 @@ class Maze
 				unl = if locked then "L" else "Unl"
 				alert "#{unl}ock tile at #{at}"
 			else
-				@toggle at, "blocked"
-				alert "Toggle block at #{at}"
+				obstacle = @toggle at, "obstacle"
+				ac = if obstacle then "Put" else "Clear"
+				alert "#{ac} obstacle at #{at}"
 		return true
 
 	scroll: (at, delta) =>
@@ -80,8 +82,8 @@ class Maze
 		return false if not tile.inside
 		# entry and exit are always passable
 		return true if tile.entry or tile.exit
-		# non-blocked tiles are passable
-		return not tile.blocked
+		# non-obstacle tiles are passable
+		return not tile.obstacle
 
 	movePlayer: (from, dir) =>
 		path = [from]
@@ -89,8 +91,8 @@ class Maze
 			next = @getNextPosition from, dir
 			break if not @isPassable next
 			path.push next
-			# take only one step onto ground
-			break if @is next, ground: true
+			# take only one step onto walkable
+			break if @is next, walkable: true
 			from = next
 		return path
 

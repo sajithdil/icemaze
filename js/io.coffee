@@ -15,8 +15,8 @@ encodeMaze = (maze) ->
 			props = (tile.special or 0) & 0x31
 			# 3 bits for properties
 			props |= 1 << 7 if tile.locked
-			props |= 1 << 6 if tile.blocked
-			props |= 1 << 5 if tile.ground
+			props |= 1 << 6 if tile.obstacle
+			props |= 1 << 5 if tile.walkable
 			data.push props
 	# encode in base64
 	return window.btoa String.fromCharCode data...
@@ -37,6 +37,6 @@ decodeMaze = (data) ->
 				special: props & 0x31
 				# 3 bits for properties
 				locked: (props & (1 << 7)) > 0
-				blocked: (props & (1 << 6)) > 0
-				ground: (props & (1 << 5)) > 0
+				obstacle: (props & (1 << 6)) > 0
+				walkable: (props & (1 << 5)) > 0
 	return maze
