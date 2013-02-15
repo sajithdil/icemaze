@@ -12,12 +12,14 @@ class Maze
 	get: (at) =>
 		[x, y] = at
 		tile = (@cells[x] or [])[y] or {}
-		# check for edges
-		[L, R, T, B] = [x is 0, x is @width - 1, y is 0, y is @height - 1]
+		# check for horizontal and vertical coincidence
+		[H, V] = [0 <= x < @width, 0 <= y < @height]
+		# check for outer edges
+		[L, R, T, B] = [x is -1, x is @width, y is -1, y is @height]
 		# define positional attributes on tile
 		return $.extend tile,
-			inside: 0 <= x < @width and 0 <= y < @height
-			border: L or R or T or B
+			inside: H and V
+			border: ((L or R) and V) or ((T or B) and H)
 			corner: (L or R) and (T or B)
 			edges:  {left: L, right: R, top: T, bottom: B}
 			entry:  x is @entry[0] and y is @entry[1]
