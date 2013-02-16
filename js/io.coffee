@@ -12,7 +12,7 @@ encodeMaze = (maze) ->
 		for y in [0 .. maze.height - 1]
 			tile = maze.get [x, y]
 			# 5 bits for special
-			props = (tile.special or 0) & 0x31
+			props = (tile.special or 0) & 31
 			# 3 bits for properties
 			props |= 1 << 7 if tile.locked
 			props |= 1 << 6 if tile.obstacle
@@ -34,7 +34,7 @@ decodeMaze = (data) ->
 			props = data.charCodeAt(i++)
 			maze.set [x, y],
 				# 5 bits for special
-				special: props & 0x31
+				special: props & 31
 				# 3 bits for properties
 				locked: (props & (1 << 7)) > 0
 				obstacle: (props & (1 << 6)) > 0
