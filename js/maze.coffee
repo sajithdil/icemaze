@@ -87,10 +87,10 @@ class Maze
 		# non-obstacle tiles are passable
 		return not tile.obstacle
 
-	movePlayer: (from, dir) =>
+	getPath: (from, dir) =>
 		path = [from]
 		while true
-			next = @getNextPosition from, dir
+			next = @getNext from, dir
 			break if not @isPassable next
 			path.push next
 			# take only one step onto walkable
@@ -98,7 +98,8 @@ class Maze
 			from = next
 		return path
 
-	getNextPosition: (from, dir, dist = 1) ->
+	getNext: (from, dir, dist = 1) ->
+		# get next position
 		switch dir
 			when "left"  then [from[0] - dist, from[1]]
 			when "up"    then [from[0], from[1] - dist]

@@ -1,21 +1,16 @@
 # IceMaze (c) 2012-2013 by Matt Cudmore
 # ThemeBasic to simply draw the maze with no image dependencies
 
-class ThemeBasic extends Theme
+class ThemeBasic extends ThemeTopdown
 
-	tileSize:       40 # px for tile width and height
-	marginSize:     20 # px margin around maze
-	winTextFont:   "30px sans-serif"
-	winTextTop:     30
-
-	matteColour:    "black"
+	constructor: ->
+		super tileSize: 30, marginSize: 15
 
 	bgColour:       "white"
 	bgLockColour:   "yellow"
-	gridLineColour: "lightgray"
-	gridLineSize:   1
 
-	floorTileSize:  .9
+	editTileSize:   .9
+	playTileSize:   1
 	iceColour:      "lightblue"
 	dirtColour:     "tan"
 	rockTileSize:   .75
@@ -23,8 +18,8 @@ class ThemeBasic extends Theme
 	rockColour:     "gray"
 
 	eeCircleSize:   .65
-	entryColour:    "green"
-	exitColour:     "orange"
+	entryColour:    "rgb(0,200,100)"
+	exitColour:     "rgb(255,100,0)"
 	eeInnerSize:    .4
 	eeInnerColour:  "white"
 
@@ -34,66 +29,14 @@ class ThemeBasic extends Theme
 	avInnerColour:  "red"
 	animOneStepMS:  50
 
-	size: =>
-		# returns the minimum canvas size required for drawing.
-		m = @marginSize * 2
-		mazeW = @maze?.width or 0
-		mazeH = @maze?.height or 0
-		drawW = mazeW * @tileSize
-		drawH = mazeH * @tileSize
-		return [drawW + m, drawH + m]
-
-	offsets: =>
-		# returns drawing offsets [x, y] for centring the maze on the canvas.
-		mazeSize = @size()
-		xoff = Math.floor((@canvasSize[0] - mazeSize[0]) / 2)
-		yoff = Math.floor((@canvasSize[1] - mazeSize[1]) / 2)
-		return [xoff + @marginSize, yoff + @marginSize]
-
-	at: (canvasX, canvasY) =>
-		# returns the tile position at the canvas coordinates.
-		offs = @offsets() # tile (0,0) offsets on full canvas
-		tileX = Math.floor((canvasX - offs[0]) / @tileSize)
-		tileY = Math.floor((canvasY - offs[1]) / @tileSize)
-		return [tileX, tileY]
-
-	redraw: (positions...) => if @maze?
-		if positions.length == 0
-			@clearCanvas()
-			@drawMatte()
-		@c2d.save()
-		@c2d.translate @offsets()...
-		if positions.length > 0
-			@drawTile at for at in positions
-		else # redraw matte and maze
-			[w, h] = [@maze.width - 1, @maze.height - 1]
-			@drawTile [x, y] for x in [0..w] for y in [0..h]
-		@c2d.restore()
-
-	##################################################
-	# tile drawing:
-
-	drawMatte: =>
-		offs = @offsets()
-		wh = @size()
-		@traceSquare offs[0] - @marginSize, offs[1] - @marginSize, wh[0], wh[1]
-		@fill @matteColour
-
-	drawTile: (at) =>
-		tile = @maze.get at
+	drawTile: (tile) =>
 		return if not tile.inside
-
-		@c2d.save()
-		@c2d.translate at[0] * @tileSize, at[1] * @tileSize
-
 		# clear
 		@traceSquareTile 1
 		@fill if tile.locked then @bgLockColour else @bgColour
-		# draw grid
-		@stroke @gridLineSize, @gridLineColour
 
 		# floor -- square
-		@traceSquareTile @floorTileSize
+		@traceSquareTile if @mode is "edit" then @editTileSize else @playTileSize
 		@fill if tile.walkable then @dirtColour else @iceColour
 
 		# objects -- rounded square
@@ -108,29 +51,11 @@ class ThemeBasic extends Theme
 			@traceCircleTile @eeInnerSize
 			@fill @eeInnerColour
 
-		@c2d.restore()
+	drawSolns: (solutions) =>
+		# TODO
 
-	traceSquareTile: (psize) =>
-		wh = @tileSize * psize
-		xy = (@tileSize - wh) / 2
-		@traceSquare xy, xy, wh, wh
-
-	traceRoundedTile: (psize, prad) =>
-		wh = @tileSize * psize
-		xy = (@tileSize - wh) / 2
-		radius = wh * prad
-		@traceRounded xy, xy, wh, wh, radius
-
-	traceCircleTile: (psize) =>
-		wh = @tileSize * psize
-		xy = @tileSize / 2
-		@traceCircle xy, xy, wh / 2
-
-	##################################################
-	# player drawing:
-
-	movePlayer: (from, dir, path, callback) =>
-		offs = @offsets()
+	drawMove: (from, dir, path, callback) =>
+		offs = @offs()
 		pixy = [from[0] * @tileSize, from[1] * @tileSize]
 		path ?= [from]
 
@@ -145,9 +70,9 @@ class ThemeBasic extends Theme
 			nowDist = nowFrac * endDist
 
 			# redraw adjacent tiles
-			posPrev = @maze.getNextPosition from, dir, nowStep - 1
-			posCurr = @maze.getNextPosition from, dir, nowStep
-			posNext = @maze.getNextPosition from, dir, nowStep + 1
+			posPrev = @maze.getNext from, dir, nowStep - 1
+			posCurr = @maze.getNext from, dir, nowStep
+			posNext = @maze.getNext from, dir, nowStep + 1
 			@redraw posPrev, posCurr, posNext
 
 			# draw avatar
@@ -168,26 +93,5 @@ class ThemeBasic extends Theme
 			# request another frame?
 			return nowTime < endTime
 
-	##################################################
-	# player winning
-
-	fanfare: =>
-		offs = @offsets()
-		mwid = @maze.width * @tileSize
-		endTime = 1000
-
-		@anim null, (nowTime) =>
-			if nowTime > endTime then nowTime = endTime
-
-			@fillCanvas "rgba(0,0,0,.1)"
-			@c2d.save()
-			@c2d.font = @winTextFont
-			@c2d.textAlign = "center"
-			@c2d.fillStyle = "white"
-			@c2d.fillText "W I N", offs[0] + mwid/2, offs[1] + @winTextTop
-			@c2d.restore()
-
-			# request another frame?
-			return nowTime < endTime
-
+# include this theme in production
 registerTheme "basic", "Basic theme", new ThemeBasic

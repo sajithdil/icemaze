@@ -1,26 +1,63 @@
 # IceMaze (c) 2012-2013 by Matt Cudmore
 
-# globals
+# GLOBALS
 themes = {}
 registerTheme = (id, title, theme) ->
 	themes[id] = [title, theme]
 
 class Theme
 
-	# each theme may define @images, @sprites, and @tiles
-	# (images will be preloaded by the default constructor)
-	images:  {} # imgID: "filename"
-	sprites: {} # spriteID: [imgID, x, y, w, h]
-	tiles:   {} # tileID: [animation mode, array of spriteID values]
+	##################################################
+	# OVERRIDABLES
 
-	# each theme may access @canvasSize
-	canvasSize: [0, 0]
+	images: {
+		# imgID: "filename"
+		# (filenames will be replaced by image objects,
+		#  preloaded by the default constructor.)
+	}
 
-	# controls for the active animation
-	currAnim: null
+	fanfare: =>
+		# acknowledge a win with visual feedback,
+		# or return false to raise a simple modal message.
+		return false
+
+	##################################################
+	# PURE VIRTUAL METHODS
+	# (themes must implement these methods.)
+
+	#size: () =>
+		# return the minimum canvas [width, height] needed to draw the maze.
+	#at: (x, y) =>
+		# return the tile position at the given [x, y] pixel coordinates.
+	#redraw: (positions...) =>
+		# redraw the tiles at the given positions,
+		# or redraw the entire maze if no positions are given.
+	#drawSolns: (solutions) =>
+		# draw the solution paths
+	#drawMove: (position, direction, path, callback) =>
+		# draw an avatar at position, facing direction;
+		# or animate moving in direction along path.
+		# use @anim(id,fnNextFrame) to request an animation frame.
+		# call callback when animation completes.
+
+	##################################################
+	# STATE VARIABLES
+	# (themes may read these, but not write.)
+
+	#maze: set by @prep; current maze
+	#mode: set by @prep; current mode either "edit" or "play"
+	#c2d:  set by @prep; current context2d for drawing
+
+	canvasSize: [0, 0] # current size of the drawing canvas
+	themeReady: false  # whether all images have been loaded
+	themeOnAir: false  # whether this is currently the active theme
+	currAnim:   null   # controls for the active animation
+
+	##################################################
+	# FINAL METHODS
 
 	constructor: (cbReady, cbError) ->
-		allReady = ()=> @ready = true; cbReady() if cbReady
+		allReady = ()=> @themeReady = true; cbReady() if cbReady
 		# count images
 		remaining = 0
 		remaining++ for i of @images
@@ -40,9 +77,6 @@ class Theme
 
 	prep: (attrs) =>
 		@stop()
-		@set attrs
-
-	set: (attrs) =>
 		@c2d = attrs.c2d if attrs.c2d?
 		@el = attrs.el if attrs.el
 		@maze = attrs.maze if attrs.maze?
@@ -50,13 +84,19 @@ class Theme
 
 	anim: (cb, fn) =>
 		@stop()
+		@resume()
 		@currAnim = startAnim fn, cb, @el
 
 	busy: =>
 		@currAnim?.busy()
 
 	stop: () =>
+		@themeOnAir = false
 		@currAnim?.cancel()
+
+	resume: () =>
+		@themeOnAir = true
+		@redraw()
 
 	resize: (min) =>
 		[w1, h1] = min
@@ -65,29 +105,7 @@ class Theme
 		@canvasSize = [max(w1, w2), max(h1, h2)]
 
 	##################################################
-	# each theme must implement these methods:
-
-	#size: () =>
-		# return the minimum canvas [width, height] needed to draw the maze.
-
-	#at: (x, y) =>
-		# return the tile position at the given [x, y] pixel coordinates.
-
-	#redraw: (positions...) =>
-		# redraw the tiles at the given positions,
-		# or redraw the entire maze if no positions are given.
-
-	#movePlayer: (position, direction, path, callback) =>
-		# draw an avatar at position, facing direction;
-		# or animate moving in direction along path.
-		# use @anim(id,fnNextFrame) to request an animation frame.
-		# call callback when animation completes.
-
-	#fanfare: =>
-		# acknowledge a win with visual feedback.
-
-	##################################################
-	# drawing utility methods:
+	# GENERAL DRAWING UTILITY METHODS
 
 	clearCanvas: () =>
 		@c2d.clearRect(0, 0, @canvasSize[0], @canvasSize[1])
@@ -96,29 +114,18 @@ class Theme
 		@c2d.fillStyle = style
 		@c2d.fillRect(0, 0, @canvasSize[0], @canvasSize[1])
 
-	drawSprite: (spriteID) =>
-		# @c2d.translate to dest location before calling drawSprite
-		spirte = @sprites[spriteID]
-		@c2d.drawImage @images[sprite[0]],
-			spirte[1], sprite[2], sprite[3], sprite[4],
-			0, 0, sprite[3], sprite[4]
-
 	fill: (sty) =>
 		@c2d.fillStyle = sty
 		@c2d.fill()
 
 	stroke: (wid, sty) =>
-		@c2d.strokeStyle = sty
 		@c2d.lineWidth = wid
+		@c2d.strokeStyle = sty
 		@c2d.stroke()
 
-	traceSquare: (x, y, w, h) =>
+	traceRect: (x, y, w, h) =>
 		@c2d.beginPath()
-		@c2d.moveTo(x, y)
-		@c2d.lineTo(x + w, y)
-		@c2d.lineTo(x + w, y + h)
-		@c2d.lineTo(x, y + h)
-		@c2d.lineTo(x, y)
+		@c2d.rect(x, y, w, h)
 		@c2d.closePath()
 
 	traceRounded: (x, y, w, h, r) =>

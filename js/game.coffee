@@ -49,13 +49,15 @@ resetGame = ->
 resumeGame = ->
 	currTheme?.stop()
 	currTheme?.clearCanvas()
-	currTheme?.redraw()
+	currTheme?.resume()
 	if currMode is "play"
-			currTheme?.movePlayer currPPost, "down"
+		currTheme?.drawMove currPPost, "down"
 
 winGame = ->
-	alert "WIN!"
-	currTheme.fanfare()
+	if not currTheme.fanfare()
+		# return false for default
+		# TODO raise modal or something
+		alert "WIN!"
 
 ##################################################
 # user interactions
@@ -101,13 +103,13 @@ handleKeydown = (ev) ->
 	# ignore unrecognized keys
 	return if not direction
 	# get the movement path
-	path = currMaze.movePlayer currPPost, direction
+	path = currMaze.getPath currPPost, direction
 	endpoint = path[path.length - 1]
 	# is the endpoint a win?
 	winner = currMaze.is endpoint, exit: true
 	# log the move
-	alert "Move #{direction} to #{endpoint}"
+	#console?.log "Move #{direction} to #{endpoint}"
 	# tell the theme to draw the movement
-	currTheme.movePlayer currPPost, direction, path, =>
+	currTheme.drawMove currPPost, direction, path, =>
 		currPPost = endpoint
 		winGame() if winner
