@@ -92,8 +92,10 @@
 			<ul class="dropdown-menu">
 				<li id="editShowSolns"><a tabindex="-1" href="#">Show Solutions</a></li>
 				<li class="divider"></li>
+				<li id="editResize"><a tabindex="-1" href="#">Resize...</a></li>
 				<li id="editClearLocks"><a tabindex="-1" href="#">Clear All Locks</a></li>
-				<li id="editClearSpecials"><a tabindex="-1" href="#">Clear All Sprites</a></li>
+				<li id="editClearMatte"><a tabindex="-1" href="#">Clear Matte Sprites</a></li>
+				<li id="editClearSpecials"><a tabindex="-1" href="#">Clear Maze Sprites</a></li>
 			</ul>
 		 </div>
 
@@ -158,11 +160,12 @@
 	<div class="modal-body">
 		<p>Click anywhere on the maze to toggle an obstacle there.</p>
 		<p>Click using one meta key (alt, ctrl, or shift) to toggle walkable dirt there.</p>
-		<p>Click using two meta keys or scroll through alternative sprites for the tile's configuration.</p>
+		<p>Click using two meta keys <em>or</em> scroll through alternative sprites for the tile's configuration.</p>
 		<p>Click using three meta keys to lock the tile, so that it won't be changed during maze optimizations.</p>
 		<p>((planned)) Drag-and-drop the entrance or exit tiles to reposition.</p>
 	</div>
 	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 		<button id="yayGoEdit" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Edit</button>
 	</div>
 </div>
@@ -178,6 +181,7 @@
 		<p>Slide across the ice. Take one step at a time on the ground. Cannot pass through obstacles.</p>
 	</div>
 	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 		<button id="yayGoPlay" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Play</button>
 	</div>
 </div>

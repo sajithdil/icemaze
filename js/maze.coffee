@@ -57,16 +57,16 @@ class Maze
 		switch metac
 			when 1
 				walkable = @toggle at, "walkable"
-				un = if walkable then "" else "un"
-				alert "Set #{un}walkable at #{at}"
+				ac = if walkable then "Set" else "Unset"
+				alert "#{ac} walkable at #{at}"
 			when 2
 				special = ((@get(at).special || 0) + 1) % 32
 				@set at, special: special
 				alert "Set sprite index to #{special} at #{at}"
 			when 3
 				locked = @toggle at, "locked"
-				unl = if locked then "L" else "Unl"
-				alert "#{unl}ock tile at #{at}"
+				ac = if locked then "Lock" else "Unlock"
+				alert "#{ac} tile at #{at}"
 			else
 				obstacle = @toggle at, "obstacle"
 				ac = if obstacle then "Put" else "Clear"

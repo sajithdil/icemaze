@@ -28,12 +28,12 @@
 #info p {
 	/* status/activity messages */
 	margin: 1px;
-	padding: 1ex;
+	padding: 1px 1ex;
 
-	background-color: white;
+	background-color: rgba(255,255,255,.8);
 	color: black;
 
-	border-radius: 1em;
+	border-radius: 1ex;
 }
 
 #wrap {

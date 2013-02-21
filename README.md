@@ -5,7 +5,7 @@ This project is inspired by the
 [Ice Path](http://bulbapedia.bulbagarden.net/wiki/Ice_Path)
 of Pokémon Gold and Silver.
 
-I remember being 11 years old and feeling impressed with this new kind of
+I remember at 11 years old feeling impressed with this new kind of
 puzzle. Regular mazes no longer seemed so interesting. My Nan and I often made
 puzzles for one another when I visited, and I wanted to introduce her to the
 ice path. But my ice mazes weren't clever enough. Either a maze had too many
